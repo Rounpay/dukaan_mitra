@@ -4,5 +4,5 @@
 
 const String DOMAIN = "dukaanmitra.co.in";
 const String API_DOMAIN = "api.$DOMAIN";
-const String BASE_URL = "http://$API_DOMAIN/api/";
+const String BASE_URL = "https://$API_DOMAIN/api/";
 
