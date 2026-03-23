@@ -8,7 +8,8 @@ class RoundedButton extends StatelessWidget {
   const RoundedButton({
     super.key,
     this.onPressed,
-    required this.text,
+    this.text,
+    this.child,
     this.width,
     this.isLoading = false,
     this.enabled = true,
@@ -18,7 +19,8 @@ class RoundedButton extends StatelessWidget {
   });
 
   final VoidCallback? onPressed;
-  final String text;
+  final String? text;
+  final Widget? child;
   final double? width;
   final double? radius;
   final bool isLoading;
@@ -28,32 +30,40 @@ class RoundedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colorScheme;
+
     return SizedBox(
       width: width,
       child: ElevatedButton(
         onPressed: enabled ? onPressed : null,
         style: ButtonStyle(
           backgroundColor: WidgetStatePropertyAll(
-            backgroundColor ?? context.colorScheme.primaryContainer,
+            backgroundColor ?? colors.primaryContainer,
           ),
           foregroundColor: WidgetStatePropertyAll(
-            foregroundColor ?? context.colorScheme.onPrimaryContainer,
+            foregroundColor ?? colors.onPrimaryContainer,
           ),
           shape: radius == null
               ? null
               : WidgetStatePropertyAll(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(radius!),
-                  ),
-                ),
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius!),
+            ),
+          ),
         ),
         child: isLoading
             ? CircularProgressIndicator(
-                color:
-                    foregroundColor ?? context.colorScheme.onPrimaryContainer,
-                constraints: BoxConstraints(minHeight: 22, minWidth: 22),
-              )
-            : Text(text),
+          color: foregroundColor ?? colors.onPrimaryContainer,
+          constraints: const BoxConstraints(minHeight: 22, minWidth: 22),
+        )
+            : child ??
+            Text(
+              text ?? '',
+              style: context.textStyle.labelLarge?.copyWith(
+                color: foregroundColor ??
+                    colors.onPrimaryContainer,
+              ),
+            ),
       ),
     );
   }

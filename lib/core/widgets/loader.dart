@@ -8,9 +8,9 @@ class Loader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Lottie.asset(
-        height: 200.0,
-        width: 200.0,
-        'assets/json/loader.json',
+        height: 80.0,
+        width: 80.0,
+        'assets/svg/loading.json',
         fit: BoxFit.fill,
       ),
     );

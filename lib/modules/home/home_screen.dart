@@ -47,7 +47,7 @@ class HomeScreen extends GetView<DashboardController> {
               ),
             ),
             SearchTextField(
-              controller: TextEditingController(),
+              controller: controller.searchController,
               hint: "Search any Product..",
               onChanged: (value) {},
             ),

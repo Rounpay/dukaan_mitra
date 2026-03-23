@@ -70,5 +70,8 @@ class ApiClient extends GetConnect with Printer {
           .toList(),
     );
   }
-
+  Future<BaseRes> logout() async {
+    final response = await post('Auth/logout', {});
+    return ApiResponseHandler.parseBaseRes(response);
+  }
 }

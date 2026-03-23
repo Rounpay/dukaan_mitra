@@ -34,7 +34,8 @@ class LoginController extends GetxController{
       }, (state) {
 
         isLoading.value = state.isLoading;
-        state.handleWithErrorBox(showLoader: false, (data) async {
+        state.handleWithErrorBox(
+            showLoader: false, (data) async {
           TextInput.finishAutofillContext();
           await CommonController.to.setUserData(data);
           Get.offAllNamed(AppRoutes.dashboard);

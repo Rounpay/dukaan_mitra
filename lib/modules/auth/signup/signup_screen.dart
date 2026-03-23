@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../core/utils/spacing.dart';
 import '../../../core/widgets/rounded_button.dart';
-import '../data/document_type_response.dart'; // ✅ new import
+import '../data/document_type_response.dart';
 
 class SignupScreen extends GetView<SignupController> {
   const SignupScreen({super.key});
@@ -20,11 +20,11 @@ class SignupScreen extends GetView<SignupController> {
     return Scaffold(
       body: Stack(
         children: [
-          SvgPicture.asset(
-            'assets/svg/circle_scatter_haikei.svg',
+         /* SvgPicture.asset(
+           // 'assets/svg/circle_scatter_haikei.svg',
             color: context.colorScheme.primaryContainer.withOpacityX(.1),
             fit: BoxFit.cover,
-          ),
+          ),*/
           SingleChildScrollView(
             child: Form(
               key: controller.formKey,
@@ -240,6 +240,9 @@ class SignupScreen extends GetView<SignupController> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: RoundedButton(
+                      radius: 10,
+                      backgroundColor: context.colorScheme.primary,
+                      foregroundColor: context.colorScheme.surface,
                       text: "Sign Up",
                       width: double.infinity,
                       onPressed: controller.signup,

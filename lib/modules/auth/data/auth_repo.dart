@@ -11,6 +11,7 @@ import '../../../data/models/user_data.dart';
 /// Know more about author at https://akash.cloudemy.in
 
 class AuthRepo {
+
   void login(
       Object body,
       void Function(UiState<UserData> state) callback,
@@ -43,6 +44,7 @@ class AuthRepo {
       callback.call(UiState.error(res.message ?? 'Error occurred'));
     }
   }
+
   void getDocumentTypeRepo(
       void Function(UiState<List<DocumentTypeResponse>> state) callback,
       ) async {
@@ -52,7 +54,6 @@ class AuthRepo {
       callback.call(const UiState.error('No internet connection'));
       return;
     }
-
     final res = await ApiClient.to.getDocumentTypeRepo();
 
     if (res.success == true) {
@@ -61,6 +62,5 @@ class AuthRepo {
       callback.call(UiState.error(res.message ?? 'Error occurred'));
     }
   }
-
 
 }

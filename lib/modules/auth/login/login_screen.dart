@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-
 import '../../../core/utils/extensions.dart';
 import '../../../core/utils/spacing.dart';
 import '../../../core/widgets/rounded_button.dart';
@@ -22,11 +21,11 @@ class LoginScreen extends GetView<LoginController> {
     return Scaffold(
       body: Stack(
         children: [
-          SvgPicture.asset(
+       /*   SvgPicture.asset(
             'assets/svg/circle_scatter_haikei.svg',
             color: context.colorScheme.primaryContainer.withOpacityX(.1),
             fit: BoxFit.cover,
-          ),
+          ),*/
           SingleChildScrollView(
             child: Form(
               key: controller.formKey,
@@ -125,6 +124,9 @@ class LoginScreen extends GetView<LoginController> {
                       padding: const EdgeInsets.all(16.0),
                       child: Obx(
                         () => RoundedButton(
+                          radius: 10,
+                          backgroundColor: context.colorScheme.primary,
+                          foregroundColor: context.colorScheme.surface,
                           text: "Sign In",
                           isLoading: controller.isLoading.value,
                           width: double.infinity,

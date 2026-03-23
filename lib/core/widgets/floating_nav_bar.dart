@@ -8,25 +8,28 @@ import '../theme/theme_colors.dart';
 class FloatingNavBar extends StatefulWidget {
   final int selectedIndex;
   final Function(int) onTap;
-  const FloatingNavBar({super.key,this.selectedIndex = 0, required this.onTap});
+
+  const FloatingNavBar({
+    super.key,
+    this.selectedIndex = 0,
+    required this.onTap,
+  });
 
   @override
   State<FloatingNavBar> createState() => _FloatingNavBarState();
 }
 
 class _FloatingNavBarState extends State<FloatingNavBar> {
-
   final icons = const [
     Icons.home_outlined,
     Icons.shopping_bag_outlined,
-    Icons.favorite_border,
+   // Icons.favorite_border,
     Icons.person_outline,
   ];
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-
     return Container(
       margin: const EdgeInsets.all(16),
       height: 68,
@@ -62,26 +65,26 @@ class _FloatingNavBarState extends State<FloatingNavBar> {
                   },
                   child: isSelected
                       ? Container(
-                    key: const ValueKey('filled'),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                    padding: const EdgeInsets.all(12),
-                    child: Icon(
-                      _filledIcon(icons[index]),
-                      color: colorScheme.surface,
-                      size: 28,
-                    ),
-                  )
+                          key: const ValueKey('filled'),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                          padding: const EdgeInsets.all(12),
+                          child: Icon(
+                            _filledIcon(icons[index]),
+                            color: colorScheme.surface,
+                            size: 28,
+                          ),
+                        )
                       : Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Icon(
-                      icons[index],
-                      key: const ValueKey('outlined'),
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Icon(
+                            icons[index],
+                            key: const ValueKey('outlined'),
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
                 ),
               ),
             ),
