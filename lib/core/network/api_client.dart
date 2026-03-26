@@ -3,6 +3,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_demo/modules/auth/data/document_type_response.dart';
+import 'package:flutter_demo/modules/dashboard/data/models/brand_response.dart';
 import 'package:flutter_demo/modules/dashboard/data/models/product_category_res.dart';
 import 'package:flutter_demo/modules/dashboard/data/models/product_response.dart';
 import 'package:get/get.dart';
@@ -86,8 +87,21 @@ class ApiClient extends GetConnect with Printer {
           (json) => UserProfileModel.fromJson(json as Map<String, dynamic>),
     );
   }
-  Future<BaseDataRes<List<ProductResponse>>> getProducts() async {
-    final response = await get('Product');
+  Future<BaseDataRes<List<ProductResponse>>> getProducts({
+    int? categoryId,
+    int? brandId,
+    double? minPrice,
+    double? maxPrice,
+    String? search,
+  }) async {
+    final query = {
+      if (categoryId != null) "CategoryId": categoryId.toString(),
+      if (brandId != null) "BrandId": brandId.toString(),
+      if (minPrice != null) "MinPrice": minPrice.toString(),
+      if (maxPrice != null) "MaxPrice": maxPrice.toString(),
+      if (search != null && search.isNotEmpty) "Search": search,
+    };
+    final response = await get('Product', query: query);
     return ApiResponseHandler.parse<List<ProductResponse>>(
       response,
           (json) => (json as List<dynamic>)
@@ -95,6 +109,16 @@ class ApiClient extends GetConnect with Printer {
           .toList(),
     );
   }
+  Future<BaseDataRes<List<BrandResponse>>> getBrand() async {
+    final response = await get('Brand');
+    return ApiResponseHandler.parse<List<BrandResponse>>(
+      response,
+          (json) => (json as List<dynamic>)
+          .map((e) => BrandResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
   Future<BaseDataRes<List<ProductCategoryRes>>> getCategories() async {
     final response = await get('Category');
     return ApiResponseHandler.parse<List<ProductCategoryRes>>(

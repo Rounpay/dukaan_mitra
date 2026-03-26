@@ -1,5 +1,6 @@
 import 'package:flutter_demo/core/network/ui_state.dart';
 import 'package:flutter_demo/core/utils/common_methods.dart';
+import 'package:flutter_demo/core/utils/extensions.dart';
 import 'package:get/get.dart';
 import '../data/models/user_data.dart';
 import '../data/repositories/common_repo.dart';
@@ -56,13 +57,19 @@ class CommonController extends GetxController {
     }
   }
 
-  void fetchProfile() {
-    repo.getUserProfile((state) {
-      profileState.value = state;
-      state.handleWithErrorBox(
-          showLoader: false, (data) async {
+  Future<void> fetchProfile({bool isRefresh = false}) async {
+    if (isRefresh ||
+        profileState.value.isError ||
+        profileState.value.isNone) {
+      await repo.getUserProfile((state) {
+        profileState.value = state;
+        state.handleWithErrorBox(
+          showLoader: false,
+              (data) {
+          },
+        );
       });
-    });
+    }
   }
 
 }

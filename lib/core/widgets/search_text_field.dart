@@ -51,10 +51,11 @@ class SearchTextField extends StatelessWidget {
             ? SizedBox()
             : IconButton(
                 onPressed: () {
+                  controller.clear();
                   controller.text = '';
                   isEmpty.value = controller.text.isEmpty;
-                  onChanged?.call(null);
-                  onSubmitted?.call(null);
+                  onChanged?.call('');
+                  onSubmitted?.call('');
                 },
                 icon: Icon(
                   Icons.close,

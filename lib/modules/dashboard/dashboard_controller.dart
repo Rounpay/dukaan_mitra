@@ -66,6 +66,23 @@ class DashboardController extends GetxController{
     });
     }
 
+  void fetchFilteredProducts({
+    int? categoryId,
+    int? brandId,
+    double? minPrice,
+    double? maxPrice,
+  }) {
+    repo.getProducts(
+          (state) {
+        productState.value = state;
+      },
+      categoryId: categoryId,
+      brandId: brandId,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+    );
+  }
+
   @override
   void onClose() {
     super.onClose();

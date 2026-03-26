@@ -37,7 +37,7 @@ class ErrorTextWidget extends StatelessWidget {
         mainAxisAlignment: mainAxisAlignment,
         mainAxisSize: mainAxisSize,
         children: [
-          Lottie.asset(height: 80.0, width: 80.0, asset, fit: BoxFit.fill),
+          Lottie.asset(height: 60.0, width: 60.0, asset, fit: BoxFit.fill),
           Text(
             msg.tr,
             style: context.textStyle.bodyLarge,

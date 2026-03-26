@@ -7,16 +7,26 @@ import '../models/product_response.dart';
 
 class DashboardRepo {
   Future<void> getProducts(
-    void Function(UiState<List<ProductResponse>>) callback,
-  ) async {
+      void Function(UiState<List<ProductResponse>>) callback, {
+        int? categoryId,
+        int? brandId,
+        double? minPrice,
+        double? maxPrice,
+        String? search
+      }) async {
     callback(const UiState.loading());
 
     if (!await isNetworkAvailable()) {
       callback(const UiState.error('No internet connection'));
       return;
     }
-
-    final res = await ApiClient.to.getProducts();
+    final res = await ApiClient.to.getProducts(
+      categoryId: categoryId,
+      brandId: brandId,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
+        search: search,
+    );
 
     if (res.success == true && res.data != null) {
       callback(UiState.success(res.data!));

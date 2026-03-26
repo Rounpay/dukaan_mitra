@@ -176,7 +176,18 @@ class HomeScreen extends GetView<DashboardController> {
                         context,
                         icon: Icons.tune,
                         label: 'Filter',
-                        onTap: () {Get.toNamed(AppRoutes.filterScreen);},
+                        onTap: () {
+                          Get.toNamed(AppRoutes.filterScreen)?.then((result) {
+                            if (result != null) {
+                              controller.fetchFilteredProducts(
+                                categoryId: result["categoryId"],
+                                brandId: result["brandId"],
+                                minPrice: result["minPrice"],
+                                maxPrice: result["maxPrice"],
+                              );
+                            }
+                          });
+                        },
                       ),
                     ],
                   ),
@@ -187,6 +198,35 @@ class HomeScreen extends GetView<DashboardController> {
             Obx(() {
               return controller.productState.value.when(
                 success: (product) {
+                  if (product.isEmpty) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 80),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.search_off,
+                              size: 60,
+                              color: Colors.grey,
+                            ),
+                            Spacing.h12,
+                            Text(
+                              "No products found",
+                              style: context.textStyle.titleMedium,
+                            ),
+                            Spacing.h4,
+                            Text(
+                              "Try changing filters",
+                              style: context.textStyle.bodySmall?.copyWith(
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
                   return MasonryGridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -298,8 +338,19 @@ class HomeScreen extends GetView<DashboardController> {
               child: AspectRatio(
                 aspectRatio: 1,
                 child: Image.network(
-                  item.images![0].imagePath!,
+                  item.images?.isNotEmpty == true
+                      ? item.images![0].imagePath ?? ''
+                      : '',
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return /*Image.asset(
+                      "assets/images/dunka.png",
+                      fit: BoxFit.cover,
+                    );*/
+                    Icon(Icons.broken_image_rounded,
+                      size: 50,
+                    );
+                  },
                 ),
               ),
             ),
@@ -384,15 +435,14 @@ class HomeScreen extends GetView<DashboardController> {
                   color: context.colorScheme.onSurfaceVariant,
                 ),
               ),
-
               Divider(height: 1, color: context.colorScheme.outlineVariant),
               Spacing.h16,
               Column(
                 children: [
-                  _sortOption(context, "Popularity", 0, selectedSort),
-                  _sortOption(context, "Price — Low to High", 1, selectedSort),
-                  _sortOption(context, "Price — High to Low", 2, selectedSort),
-                  _sortOption(context, "Newest First", 3, selectedSort),
+                  _sortOption(context, "All", 1, selectedSort),
+                  _sortOption(context, "A-Z", 2, selectedSort),
+                  _sortOption(context, "Price — High to Low", 3, selectedSort),
+                  _sortOption(context, "Price — Low to High", 4, selectedSort),
                 ],
               ),
             ],

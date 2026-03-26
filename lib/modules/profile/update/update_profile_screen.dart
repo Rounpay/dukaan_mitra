@@ -7,6 +7,7 @@ import 'package:flutter_demo/core/widgets/loader.dart';
 import 'package:flutter_demo/modules/profile/update/update_profile_controller.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../core/common_controller.dart';
 import '../../../core/utils/extensions.dart';
 import '../../../core/widgets/rounded_button.dart';
 import '../../../core/widgets/text_field_with_label.dart';
@@ -32,8 +33,7 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
                       backgroundColor: Colors.grey.shade200,
                       backgroundImage: controller.profileImage.value != null
                           ? FileImage(controller.profileImage.value!)
-                          : const AssetImage("assets/images/boy.png")
-                                as ImageProvider,
+                          : null,
                     );
                   }),
                   Positioned(
@@ -119,8 +119,7 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
             _SectionLabel(label: 'Uploaded Documents'),
             Spacing.h8,
             Obx(() {
-
-              final state = controller.profileState.value;
+              final state = CommonController.to.profileState.value;
               return state.when(
                 success: (data) {
                   final docs = data.documents ?? [];

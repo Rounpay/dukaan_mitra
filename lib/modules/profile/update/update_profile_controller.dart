@@ -1,20 +1,18 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/core/common_controller.dart';
+import 'package:flutter_demo/core/utils/extensions.dart';
 import 'package:flutter_demo/modules/profile/data/repo/profile_repo.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/network/ui_state.dart';
-import '../../../core/utils/common_methods.dart';
 import '../data/model/user_profile_model.dart';
 
 class UpdateProfileController extends GetxController{
   final ProfileRepo repo;
   UpdateProfileController({required this.repo});
-
-
   final profileState = UiState<UserProfileModel>.none().obs;
   final documents = <Documents>[].obs;
-
   final fullNameController = TextEditingController();
   final mobileNumberController = TextEditingController();
   final emailController = TextEditingController();
@@ -30,25 +28,22 @@ class UpdateProfileController extends GetxController{
   }
   final ImagePicker _picker = ImagePicker();
   Rx<File?> profileImage = Rx<File?>(null);
+
+
   @override
-  void onInit() {
-    super.onInit();
-    fetchProfile();
+  void onReady() async {
+    super.onReady();
+    profileState.value = CommonController.to.profileState.value;
+    setData(profileState.value.getDataOrNull);
+  }
+  void setData(UserProfileModel? data){
+    fullNameController.text = data?.fullName ?? '';
+    mobileNumberController.text = data?.mobileNumber ?? '';
+    emailController.text = data?.email ?? '';
+    documents.value = data?.documents ?? [];
+
   }
 
-  void fetchProfile() {
-    repo.getUserProfile((state) {
-      profileState.value = state;
-      state.handleWithErrorBox(
-          showLoader: false, (data) async {
-        fullNameController.text = data.fullName ?? '';
-        mobileNumberController.text = data.mobileNumber ?? '';
-        emailController.text = data.email ?? '';
-        documents.value = data.documents ?? [];
-        showSuccessToast("Profile Loaded");
-      });
-    });
-  }
   @override
   void onClose() {
     fullNameController.dispose();

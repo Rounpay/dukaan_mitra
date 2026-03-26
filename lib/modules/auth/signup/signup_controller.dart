@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import '../../../core/common_controller.dart';
 import '../../../core/network/base_res.dart';
 import '../../../core/network/ui_state.dart';
 import '../../../core/utils/common_methods.dart';
@@ -136,6 +137,7 @@ class SignupController extends GetxController {
       state.handleWithErrorBox(
           showLoader: false, (data) async {
         showSuccessToast("Signup Successful");
+        await CommonController.to.fetchProfile(isRefresh: true);
         Get.back();
       });
     });
