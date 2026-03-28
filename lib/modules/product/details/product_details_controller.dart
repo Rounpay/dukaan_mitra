@@ -40,8 +40,7 @@ class ProductDetailsController extends GetxController{
       loanApplyState.value = state;
       state.handleWithErrorBox(
           showLoader: false, (data) async {
-        showSuccessToast("Loan Application Submit Successfully");
-      });
+        showSuccessDialog(data.message ?? "Application submitted successfully");      });
     });
  }
 
