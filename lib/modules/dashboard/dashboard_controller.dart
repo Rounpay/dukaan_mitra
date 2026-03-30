@@ -24,6 +24,10 @@ class DashboardController extends GetxController{
   final customerPortalState = UiState<List<CustomerPortalRes>>.none().obs;
   final categoryState = UiState<List<ProductCategoryRes>>.none().obs;
 
+  var selectedCategoryId = RxnInt();
+  var selectedBrandId = RxnInt();
+  var priceRange = const RangeValues(0, 999999).obs;
+
 
   final RxInt currentPage = 0.obs;
 
@@ -65,20 +69,15 @@ class DashboardController extends GetxController{
     });
     }
 
-  void fetchFilteredProducts({
-    int? categoryId,
-    int? brandId,
-    double? minPrice,
-    double? maxPrice,
-  }) {
+  void fetchFilteredProducts() {
     repo.getProducts(
           (state) {
         productState.value = state;
       },
-      categoryId: categoryId,
-      brandId: brandId,
-      minPrice: minPrice,
-      maxPrice: maxPrice,
+      categoryId: selectedCategoryId.value,
+      brandId: selectedBrandId.value,
+      minPrice: priceRange.value.start,
+      maxPrice: priceRange.value.end,
     );
   }
 

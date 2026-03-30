@@ -17,6 +17,15 @@ class FilterController extends GetxController {
   var maxPrice = 999999.0.obs;
   var priceRange = const RangeValues(0, 999999).obs;
 
+  @override
+  void onInit() {
+    selectedCategoryId.value = Get.arguments["categoryId"];
+    selectedBrandId.value = Get.arguments["brandId"];
+    priceRange.value = RangeValues(
+        Get.arguments["minPrice"]?.toDouble() ?? 0,
+        Get.arguments["maxPrice"]?.toDouble() ?? 999999);
+    super.onInit();
+  }
 
 @override
 void onReady() {
