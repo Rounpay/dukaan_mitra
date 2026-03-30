@@ -11,8 +11,7 @@ class DashboardScreen extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.colorScheme.surfaceContainerLow.withOpacity(0.5),
-      extendBody: true,
+
       body: Obx(
             () => IndexedStack(
           index: controller.currentIndex.value,

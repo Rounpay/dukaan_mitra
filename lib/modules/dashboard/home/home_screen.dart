@@ -449,15 +449,20 @@ class HomeScreen extends GetView<DashboardController> {
                   Row(
                     children: [
                       Text(
-                        "₹ ${item.offerPrice ?? item.mrp ?? 0}",
+                        "₹ ${item.offerPrice != null && item.offerPrice! < (item.mrp ?? 0)
+                            ? item.offerPrice
+                            : item.mrp ?? 0}",
                         style: context.textStyle.titleSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
+
                       Spacing.w8,
-                      if (item.offerPrice != null)
+                      if (item.offerPrice != null &&
+                          item.mrp != null &&
+                          item.offerPrice! < item.mrp!)
                         Text(
-                          "₹ ${item.mrp ?? 0}",
+                          "₹ ${item.mrp}",
                           style: context.textStyle.bodySmall?.copyWith(
                             color: Colors.grey,
                             decoration: TextDecoration.lineThrough,

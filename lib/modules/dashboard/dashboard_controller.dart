@@ -94,6 +94,7 @@ class DashboardController extends GetxController{
       );
     }
   }
+
   void customerPortal() {
     repo.getCustomerPortal((state) {
       customerPortalState.value = state;

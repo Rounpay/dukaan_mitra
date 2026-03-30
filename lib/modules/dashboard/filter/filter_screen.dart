@@ -65,10 +65,10 @@ class FilterScreen extends GetView<FilterController> {
                 ),
               ),
               Spacing.h8,
-
-              ...List.generate(data.length, (index) {
-                final item = data[index];
-
+              ...List.generate(
+                  data.length, (index) {
+                final item = data[index
+                ];
                 return Row(
                   children: [
                     Checkbox(

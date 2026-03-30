@@ -1,10 +1,9 @@
-import 'package:flutter_demo/core/common_controller.dart';
 import 'package:flutter_demo/modules/auth/signup/signup_screen.dart';
-import 'package:flutter_demo/modules/dashboard/data/repo/dashboard_repo.dart';
 import 'package:flutter_demo/modules/product/data/repo/product_detail_repo.dart';
 import 'package:flutter_demo/modules/product/details/product_details_controller.dart';
 import 'package:flutter_demo/modules/product/details/product_details_screen.dart';
 import 'package:flutter_demo/modules/profile/data/repo/profile_repo.dart';
+import 'package:flutter_demo/modules/purchase/details/purchase_controller.dart';
 import 'package:get/get.dart';
 
 import '../modules/auth/data/auth_repo.dart';
@@ -13,12 +12,15 @@ import '../modules/auth/login/login_screen.dart';
 import '../modules/auth/signup/signup_controller.dart';
 import '../modules/dashboard/dashboard_controller.dart';
 import '../modules/dashboard/dashboard_screen.dart';
-import '../modules/dashboard/home/filter/data/filter_repo.dart';
-import '../modules/dashboard/home/filter/filter_controller.dart';
-import '../modules/dashboard/home/filter/filter_screen.dart';
+import '../modules/dashboard/filter/data/filter_repo.dart';
+import '../modules/dashboard/filter/filter_controller.dart';
+import '../modules/dashboard/filter/filter_screen.dart';
+
 import '../modules/onboarding/onboarding_screen.dart';
 import '../modules/profile/update/update_profile_controller.dart';
 import '../modules/profile/update/update_profile_screen.dart';
+import '../modules/purchase/data/purchase_repo.dart';
+import '../modules/purchase/details/purchase_details_screen.dart';
 import 'app_routes.dart';
 
 /// @Created by akash on 08-12-2025.
@@ -72,6 +74,14 @@ class AppPages {
       }),
     ),
 
+    GetPage(
+      name: AppRoutes.purchaseDetailsScreen,
+      page: () => PurchaseDetailsScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => PurchaseRepo());
+        Get.lazyPut(() => PurchaseController(repo: Get.find()));
+      }),
+    ),
     GetPage(
       name: AppRoutes.dashboard,
       page: () => DashboardScreen(),

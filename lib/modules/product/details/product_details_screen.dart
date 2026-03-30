@@ -33,7 +33,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          data.brandName ?? 'GODREJ',
+                          data.brandName ?? 'No Brand',
                           style: context.textStyle.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                             color: context.colorScheme.onSurfaceVariant,
@@ -59,9 +59,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      data.title ??
-                          'Godrej 87 L Edge Cool Blast Desert Air Cooler '
-                              '(Unique Ice Drip Technology, 18" wide fan, Wine Red)',
+                      data.title ??"No Product Name",
                       style: context.textStyle.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         height: 1.4,
@@ -75,16 +73,18 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                     child: Row(
                       children: [
                         Text(
-                          "₹ ${data.offerPrice ?? data.mrp ?? 0}",
+                          "₹ ${data.offerPrice != null && data.offerPrice! < (data.mrp ?? 0) ? data.offerPrice : data.mrp ?? 0}",
                           style: context.textStyle.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-
                         Spacing.w8,
-                        if (data.offerPrice != null)
+
+                        if (data.offerPrice != null &&
+                            data.mrp != null &&
+                            data.offerPrice! < data.mrp!)
                           Text(
-                            "₹ ${data.mrp ?? 0}",
+                            "₹ ${data.mrp}",
                             style: context.textStyle.bodyMedium?.copyWith(
                               color: Colors.grey,
                               decoration: TextDecoration.lineThrough,

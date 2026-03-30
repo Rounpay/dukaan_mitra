@@ -1,10 +1,9 @@
-import 'package:flutter_demo/modules/dashboard/home/filter/data/filter_repo.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/common_controller.dart';
 import '../../../../core/network/ui_state.dart';
-import '../../data/models/brand_response.dart';
-import '../../data/models/product_category_res.dart';
+
+import 'data/filter_repo.dart';
 
 class FilterController extends GetxController {
   final FilterRepo repo;

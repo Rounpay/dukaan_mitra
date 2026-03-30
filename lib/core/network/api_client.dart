@@ -1,6 +1,5 @@
 /// @Created by akash on 16-02-2024.
 /// Know more about author at https://akash.cloudemy.in
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_demo/modules/auth/data/document_type_response.dart';
 import 'package:flutter_demo/modules/dashboard/data/models/brand_response.dart';
@@ -9,14 +8,12 @@ import 'package:flutter_demo/modules/dashboard/data/models/product_category_res.
 import 'package:flutter_demo/modules/dashboard/data/models/product_response.dart';
 import 'package:flutter_demo/modules/product/data/model/product_detail_model.dart';
 import 'package:get/get.dart';
-
-
 import '../../core/constants/app_constants.dart';
 import '../../core/utils/printer.dart';
 import '../../data/models/user_data.dart';
 import '../../modules/profile/data/model/user_profile_model.dart';
+import '../../modules/purchase/data/purchase_data_res.dart';
 import '../common_controller.dart';
-import '../utils/common_methods.dart';
 import 'api_response_handler.dart';
 import 'base_res.dart';
 
@@ -155,5 +152,11 @@ class ApiClient extends GetConnect with Printer {
           .toList(),
     );
   }
-
+  Future<BaseDataRes<PurchaseDataRes>> getLoanDetails(int loanId) async {
+    final response = await get('CustomerPortal/loan/$loanId');
+    return ApiResponseHandler.parse<PurchaseDataRes>(
+      response,
+          (json) => PurchaseDataRes.fromJson(json as Map<String, dynamic>),
+    );
+  }
 }

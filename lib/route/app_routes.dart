@@ -11,5 +11,6 @@ class AppRoutes {
   static const updateProfile = '/update-profile';
   static const filterScreen = '/FilterScreen';
   static const productDetailsScreen = '/productDetailsScreen';
+  static const purchaseDetailsScreen = '/purchaseDetailsScreen';
 
 }

@@ -1,53 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_demo/core/theme/theme_colors.dart';
 import 'package:flutter_demo/core/utils/extensions.dart';
+import 'package:flutter_demo/core/widgets/error_text_widget.dart';
+import 'package:flutter_demo/core/widgets/loader.dart';
+import 'package:flutter_demo/route/app_routes.dart';
 import 'package:get/get.dart';
 
+import '../../../core/network/ui_state.dart';
+import '../../../core/theme/theme_colors.dart';
 import '../../../core/utils/spacing.dart';
 import '../../../core/widgets/rounded_button.dart';
+import '../../purchase/details/purchase_details_screen.dart';
 import '../dashboard_controller.dart';
+import '../data/models/customer_portal_res.dart';
 
 class PurchaseHistory extends GetView<DashboardController> {
   const PurchaseHistory({super.key});
-
-  static const List<Map<String, String>> completedItems = [
-    {
-      'name': 'Apple iPhone 16 Pro Max \n 256GB',
-      'price': 'Rs.389,900.00',
-      'status': 'DELIVERED',
-      'image': 'https://m.media-amazon.com/images/I/61bK6PMOC3L._AC_SX200_.jpg',
-    },
-    {
-      'name': 'Apple AirPods Max 2024',
-      'price': 'Rs.199,900.00',
-      'status': 'DELIVERED',
-      'image': 'https://m.media-amazon.com/images/I/81xSSqfBFML._AC_SX200_.jpg',
-    },
-    {
-      'name': 'Apple Mac Mini M2 Chip \n 8GB RAM 256GB',
-      'price': 'Rs.189,900.00',
-      'status': 'DELIVERED',
-      'image': 'https://m.media-amazon.com/images/I/61a2y2WCUGL._AC_SX200_.jpg',
-    },
-  ];
-
-  static const List<Map<String, String>> pendingItems = [
-    {
-      'name': 'Spigen Galaxy Z Flip \n 4 Air Skin Case Glitter',
-      'price': 'Rs.18,900.00',
-      'status': 'PENDING',
-      'image': 'https://m.media-amazon.com/images/I/71Q4j4z4+ML._AC_SX200_.jpg',
-    },
-  ];
-
-  static const List<Map<String, String>> canceledItems = [
-    {
-      'name': 'Samsung Galaxy A55 Tempered Glass',
-      'price': 'Rs.1,500.00',
-      'status': 'CANCELLED',
-      'image': 'https://m.media-amazon.com/images/I/51bCa8FEJMLL._AC_SX200_.jpg',
-    },
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -72,51 +39,83 @@ class PurchaseHistory extends GetView<DashboardController> {
               ),
             ),
             tabs: const [
-              Tab(text: 'Completed'),
               Tab(text: 'Pending'),
+              Tab(text: 'Completed'),
               Tab(text: 'Canceled'),
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            _buildList(
-              context: context,
-              items: completedItems,
-              type: PurchaseType.completed,
-            ),
-            _buildList(
-              context: context,
-              items: pendingItems,
-              type: PurchaseType.pending,
-            ),
-            _buildList(
-              context: context,
-              items: canceledItems,
-              type: PurchaseType.canceled,
-            ),
-          ],
-        ),
+        body: Obx(() {
+          final state = controller.customerPortalState.value;
+          return state.when(
+            none: () => const SizedBox(),
+            loading: () => const Center(child: Loader()),
+            error: (msg) => Center(child: ErrorTextWidget(msg: msg)),
+            success: (data) {
+              final pending = data
+                  .where(
+                    (e) =>
+                        PurchaseType.fromStatusId(e.loanStatusId) ==
+                        PurchaseType.pending,
+                  )
+                  .toList();
+              final completed = data
+                  .where(
+                    (e) =>
+                        PurchaseType.fromStatusId(e.loanStatusId) ==
+                        PurchaseType.completed,
+                  )
+                  .toList();
+              final canceled = data
+                  .where(
+                    (e) =>
+                        PurchaseType.fromStatusId(e.loanStatusId) ==
+                        PurchaseType.canceled,
+                  )
+                  .toList();
+
+              return TabBarView(
+                children: [
+                  _buildList(context, pending, PurchaseType.pending),
+                  _buildList(context, completed, PurchaseType.completed),
+                  _buildList(context, canceled, PurchaseType.canceled),
+                ],
+              );
+            },
+          );
+        }),
       ),
     );
   }
 
-  Widget _buildList({
-    required BuildContext context,
-    required List<Map<String, String>> items,
-    required PurchaseType type,
-  }) {
+  Widget _buildList(
+    BuildContext context,
+    List<CustomerPortalRes> items,
+    PurchaseType type,
+  ) {
+    if (items.isEmpty) {
+      return Center(
+        child: Text(
+          'No Any ${type.name} orders',
+          style: context.textStyle.bodyMedium?.copyWith(
+            color: context.colorScheme.onSurfaceVariant,
+          ),
+        ),
+      );
+    }
+
     return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.all(16),
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
         return purchaseCard(
           context: context,
-          name: item['name'] ?? '',
-          price: item['price'] ?? '',
-          imageUrl: item['image'] ?? '',
-          status: item['status'] ?? '',
+          name: item.productName ?? '',
+          loanId: item.loanId,
+          price: 'Rs.${item.loanAmount ?? 0}',
+          imageUrl: item.productImage?.firstOrNull?.imagePath ?? '',
+          status: item.loanStatus ?? '',
           type: type,
         );
       },
@@ -125,6 +124,7 @@ class PurchaseHistory extends GetView<DashboardController> {
 
   Widget purchaseCard({
     required BuildContext context,
+    required int? loanId,
     required String name,
     required String price,
     required String imageUrl,
@@ -157,7 +157,7 @@ class PurchaseHistory extends GetView<DashboardController> {
                   imageUrl,
                   width: 72,
                   height: 72,
-                  fit: BoxFit.contain,
+                  fit: BoxFit.cover,
                   errorBuilder: (_, _, _) => Container(
                     width: 72,
                     height: 72,
@@ -184,13 +184,13 @@ class PurchaseHistory extends GetView<DashboardController> {
                         vertical: 3,
                       ),
                       decoration: BoxDecoration(
-                        color: context.colorScheme.surfaceContainerHighest,
+                        color: _statusBadgeColor(context, type),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        status,
+                        status.toUpperCase(),
                         style: context.textStyle.labelSmall?.copyWith(
-                          color: context.colorScheme.onSurfaceVariant,
+                          color: _statusTextColor(context, type),
                           fontWeight: FontWeight.w700,
                           letterSpacing: 0.5,
                         ),
@@ -232,26 +232,62 @@ class PurchaseHistory extends GetView<DashboardController> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              RoundedButton(
-                backgroundColor: context.colorScheme.primary,
-                foregroundColor: context.colorScheme.surface,
-                radius: 20,
-                enabled: true,
-                isLoading: false,
-                onPressed: () {},
-                child: Text(
-                  type == PurchaseType.pending ? 'Track' : 'View',
-                  style: context.textStyle.labelLarge?.copyWith(
-                    color: Colors.white,
+              if (type != PurchaseType.canceled)
+                RoundedButton(
+                  backgroundColor: context.colorScheme.primary,
+                  foregroundColor: context.colorScheme.surface,
+                  radius: 20,
+                  enabled: true,
+                  isLoading: false,
+                  onPressed: () {
+                    if (type == PurchaseType.completed) {
+                     Get.toNamed(AppRoutes.purchaseDetailsScreen,arguments: {'loanId': loanId},
+                     );
+                    }
+                  },
+                  child: Text(
+                    type == PurchaseType.pending ? 'Track' : 'View Details',
+                    style: context.textStyle.labelLarge?.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ],
       ),
     );
   }
+
+  Color _statusBadgeColor(BuildContext context, PurchaseType type) {
+    return switch (type) {
+      PurchaseType.completed => ThemeColors.colorGreen.withOpacity(0.12),
+      PurchaseType.canceled => ThemeColors.colorRed.withOpacity(0.12),
+      PurchaseType.pending => context.colorScheme.surfaceContainerHighest,
+    };
+  }
+
+  Color _statusTextColor(BuildContext context, PurchaseType type) {
+    return switch (type) {
+      PurchaseType.completed => ThemeColors.colorGreen,
+      PurchaseType.canceled => ThemeColors.colorRed,
+      PurchaseType.pending => context.colorScheme.onSurfaceVariant,
+    };
+  }
 }
 
-enum PurchaseType { completed, pending, canceled }
+enum PurchaseType {
+  completed(statusId: 9),
+  canceled(statusId: 7),
+  pending(statusId: null);
+
+  final int? statusId;
+
+  const PurchaseType({required this.statusId});
+
+  static PurchaseType fromStatusId(int? id) {
+    if (id == 8 || id == 9) return PurchaseType.completed;
+    if (id == 6 || id== 7) return PurchaseType.canceled;
+    return PurchaseType.pending;
+  }
+}
