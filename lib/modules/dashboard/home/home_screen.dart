@@ -11,6 +11,24 @@ import 'package:flutter_demo/route/app_routes.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 
+import '../../../core/widgets/image_widget.dart';
+import '../../../core/widgets/search_text_field.dart';
+import '../dashboard_controller.dart';
+
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_demo/core/network/ui_state.dart';
+import 'package:flutter_demo/core/theme/theme_colors.dart';
+import 'package:flutter_demo/core/utils/extensions.dart';
+import 'package:flutter_demo/core/utils/spacing.dart';
+import 'package:flutter_demo/core/widgets/error_text_widget.dart';
+import 'package:flutter_demo/core/widgets/loader.dart';
+import 'package:flutter_demo/modules/dashboard/data/models/product_response.dart';
+import 'package:flutter_demo/route/app_routes.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:get/get.dart';
+
+import '../../../core/widgets/image_widget.dart';
 import '../../../core/widgets/search_text_field.dart';
 import '../dashboard_controller.dart';
 
@@ -59,106 +77,120 @@ class HomeScreen extends GetView<DashboardController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: SizedBox(
-                  height: 90,
-                  child: Obx(() {
-                    return controller.categoryState.value.when(
-                      success: (data) {
-                        return ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                          ),
-                          itemCount: data.length,
-                          separatorBuilder: (_, _) => Spacing.w12,
-                          itemBuilder: (context, index) {
-                            final item = data[index];
-                            return circleIconItem(
-                              context,
-                              imagePath: item.imagePath ?? "",
-                              label: item.categoryName ?? "",
+              Obx(() {
+                if (controller.isSearching.value) return SizedBox.shrink();
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: SizedBox(
+                        height: 90,
+                        child: Obx(() {
+                          return controller.categoryState.value.when(
+                            success: (data) {
+                              return ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                ),
+                                itemCount: data.length,
+                                separatorBuilder: (_, _) => Spacing.w12,
+                                itemBuilder: (context, index) {
+                                  final item = data[index];
+                                  return circleIconItem(
+                                    context,
+                                    imagePath: item.imagePath ?? "",
+                                    label: item.categoryName ?? "",
+                                  );
+                                },
+                              );
+                            },
+                            error: (error) =>
+                                Center(child: ErrorTextWidget(msg: error)),
+                            loading: () => Loader(),
+                            none: () => const SizedBox(),
+                          );
+                        }),
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      child: Text(
+                        "Latest Promotion",
+                        style: context.textStyle.titleMedium,
+                      ),
+                    ),
+
+                    Column(
+                      children: [
+                        CarouselSlider(
+                          items: controller.promoImages.map((image) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.asset(
+                                  image,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                ),
+                              ),
                             );
-                          },
-                        );
-                      },
-                      error: (error) => ErrorTextWidget(msg: error),
-                      loading: () => Loader(),
-                      none: () => SizedBox(),
-                    );
-                  }),
-                ),
-              ),
+                          }).toList(),
+                          options: CarouselOptions(
+                            height: 200,
+                            viewportFraction: 0.9,
+                            enlargeCenterPage: true,
+                            autoPlay: true,
+                            autoPlayInterval: const Duration(seconds: 3),
+                            autoPlayAnimationDuration: const Duration(
+                              milliseconds: 800,
+                            ),
+                            onPageChanged: (index, reason) {
+                              controller.currentPage.value = index;
+                            },
+                          ),
+                        ),
+                        Spacing.h8,
+                        Obx(
+                          () => Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(
+                              controller.promoImages.length,
+                              (index) => AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                ),
+                                width: controller.currentPage.value == index
+                                    ? 20
+                                    : 8,
+                                height: 8,
+                                decoration: BoxDecoration(
+                                  color: controller.currentPage.value == index
+                                      ? context.colorScheme.primary
+                                      : Colors.grey.shade400,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
 
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  "Latest Promotion",
-                  style: context.textStyle.titleMedium,
-                ),
-              ),
-              Column(
-                children: [
-                  CarouselSlider(
-                    items: controller.promoImages.map((image) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            image,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    options: CarouselOptions(
-                      height: 200,
-                      viewportFraction: 0.9,
-                      enlargeCenterPage: true,
-                      autoPlay: true,
-                      autoPlayInterval: const Duration(seconds: 3),
-                      autoPlayAnimationDuration: const Duration(
-                        milliseconds: 800,
-                      ),
-                      onPageChanged: (index, reason) {
-                        controller.currentPage.value = index;
-                      },
-                    ),
-                  ),
-                  Spacing.h8,
-                  Obx(
-                        () => Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        controller.promoImages.length,
-                            (index) => AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                          ),
-                          width: controller.currentPage.value == index
-                              ? 20
-                              : 8,
-                          height: 8,
-                          decoration: BoxDecoration(
-                            color: controller.currentPage.value == index
-                                ? context.colorScheme.primary
-                                : Colors.grey.shade400,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                    Spacing.h16,
+                  ],
+                );
+              }),
               Spacing.h16,
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
@@ -181,33 +213,70 @@ class HomeScreen extends GetView<DashboardController> {
                             sortBottomSheet(context);
                           },
                         ),
-                        const SizedBox(width: 8),
-                        _actionButton(
-                          context,
-                          icon: Icons.tune,
-                          label: 'Filter',
-                          onTap: () {
-                            Get.toNamed(
-                                AppRoutes.filterScreen,
-                                arguments: {
-                                  "categoryId": controller.selectedCategoryId.value,
-                                  "brandId": controller.selectedBrandId.value,
-                                  "minPrice": controller.priceRange.value.start,
-                                  "maxPrice": controller.priceRange.value.end
-                                }
-                            )?.then((
-                                result,
-                                ) {
-                              if (result != null) {
-                                controller.priceRange.value =
-                                    RangeValues(result["minPrice"], result["maxPrice"]);
-                                controller.selectedCategoryId.value = result["categoryId"];
-                                controller.selectedBrandId.value = result["brandId"];
-                                controller.fetchFilteredProducts();
-                              }
-                            });
-                          },
-                        ),
+                        Spacing.w8,
+
+                        Obx(() {
+                          final isFilterActive =
+                              controller.selectedCategoryId.value != null ||
+                              controller.selectedBrandId.value != null ||
+                              controller.priceRange.value.start != 0 ||
+                              controller.priceRange.value.end != 999999;
+
+                          return Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              _actionButton(
+                                context,
+                                icon: Icons.tune,
+                                label: 'Filter',
+                                onTap: () {
+                                  Get.toNamed(
+                                    AppRoutes.filterScreen,
+                                    arguments: {
+                                      "categoryId":
+                                          controller.selectedCategoryId.value,
+                                      "brandId":
+                                          controller.selectedBrandId.value,
+                                      "minPrice":
+                                          controller.priceRange.value.start,
+                                      "maxPrice":
+                                          controller.priceRange.value.end,
+                                    },
+                                  )?.then((result) {
+                                    if (result != null) {
+                                      controller.priceRange.value = RangeValues(
+                                        result["minPrice"],
+                                        result["maxPrice"],
+                                      );
+                                      controller.selectedCategoryId.value =
+                                          result["categoryId"];
+                                      controller.selectedBrandId.value =
+                                          result["brandId"];
+                                      controller.fetchFilteredProducts();
+                                    }
+                                  });
+                                },
+                              ),
+                              if (isFilterActive)
+                                Positioned(
+                                  top: -2,
+                                  right: -2,
+                                  child: Container(
+                                    width: 12,
+                                    height: 12,
+                                    decoration: BoxDecoration(
+                                      color: ThemeColors.colorGreen,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: context.colorScheme.surface,
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          );
+                        }),
                       ],
                     ),
                   ],
@@ -220,9 +289,7 @@ class HomeScreen extends GetView<DashboardController> {
                     if (product.isEmpty) {
                       return Center(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -232,20 +299,10 @@ class HomeScreen extends GetView<DashboardController> {
                               ),
                               Text(
                                 "No Products Found",
-                                style: context.textStyle.titleLarge
-                                    ?.copyWith(
+                                style: context.textStyle.titleLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-
-                              /*   Spacing.h4,
-                            Text(
-                              "We couldn't find any items.\nTry adjusting your filters.",
-                              textAlign: TextAlign.center,
-                              style: context.textStyle.bodyMedium?.copyWith(
-                                color: Colors.grey,
-                              ),
-                            ),*/
                             ],
                           ),
                         ),
@@ -255,13 +312,11 @@ class HomeScreen extends GetView<DashboardController> {
                     return MasonryGridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       gridDelegate:
-                      const SliverSimpleGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 220,
-                      ),
+                          const SliverSimpleGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 220,
+                          ),
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
                       itemCount: product.length,
@@ -271,15 +326,15 @@ class HomeScreen extends GetView<DashboardController> {
                       },
                     );
                   },
-                  error: (error) => ErrorTextWidget(msg: error),
+                  error: (error) => Center(child: ErrorTextWidget(msg: error)),
                   loading: () => Loader(),
-                  none: () => SizedBox(),
+                  none: () => const SizedBox(),
                 );
               }),
             ],
           ),
         ),
-      )
+      ),
     );
   }
 
@@ -316,14 +371,13 @@ class HomeScreen extends GetView<DashboardController> {
   }
 
   Widget circleIconItem(
-      BuildContext context, {
-        required String? imagePath,
-        required String label,
-        double size = 60,
-        double iconSize = 28,
-        VoidCallback? onTap,
-      }) {
-
+    BuildContext context, {
+    required String? imagePath,
+    required String label,
+    double size = 60,
+    double iconSize = 28,
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -340,32 +394,30 @@ class HomeScreen extends GetView<DashboardController> {
               padding: const EdgeInsets.all(12),
               child: imagePath != null && imagePath.isNotEmpty
                   ? Image.network(
-                imagePath,
-                fit: BoxFit.cover,
-                errorBuilder: (_, _, _) {
-                  return Icon(
-                    Icons.category,
-                    size: iconSize,
-                    color: context.colorScheme.onSurfaceVariant,
-                  );
-                },
-              )
+                      imagePath,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, _, _) {
+                        return Icon(
+                          Icons.shopping_bag_outlined,
+                          size: iconSize,
+                          color: context.colorScheme.onSurfaceVariant,
+                        );
+                      },
+                    )
                   : Icon(
-                Icons.category,
-                size: iconSize,
-                color: context.colorScheme.onSurfaceVariant,
-              ),
+                      Icons.shopping_bag_outlined,
+                      size: iconSize,
+                      color: context.colorScheme.onSurfaceVariant,
+                    ),
             ),
           ),
           Spacing.h8,
-          Text(
-            label,
-            style: context.textStyle.bodySmall,
-          ),
+          Text(label, style: context.textStyle.bodySmall),
         ],
       ),
     );
   }
+
   Widget _buildStaticCard(BuildContext context, ProductResponse item) {
     return InkWell(
       onTap: () {
@@ -392,17 +444,13 @@ class HomeScreen extends GetView<DashboardController> {
                 borderRadius: BorderRadius.circular(14),
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: Image.network(
-                    item.images?.isNotEmpty == true
-                        ? item.images![0].imagePath ?? ''
-                        : '',
+                  child: ImageWidget(
+                    url: item.images?.isNotEmpty == true
+                        ? item.images![0].imagePath
+                        : null,
+                    radius: 14,
                     fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return /*Image.asset(
-                        "assets/images/dunka.png",
-                        fit: BoxFit.cover,
-                      );*/ Image.asset("assets/images/Image_not_available.png");
-                    },
+                    placeholder: "assets/images/Image_not_available.png",
                   ),
                 ),
               ),
@@ -442,14 +490,11 @@ class HomeScreen extends GetView<DashboardController> {
                   Row(
                     children: [
                       Text(
-                        "₹ ${item.offerPrice != null && item.offerPrice! < (item.mrp ?? 0)
-                            ? item.offerPrice
-                            : item.mrp ?? 0}",
+                        "₹ ${item.offerPrice != null && item.offerPrice! < (item.mrp ?? 0) ? item.offerPrice : item.mrp ?? 0}",
                         style: context.textStyle.titleSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-
                       Spacing.w8,
                       if (item.offerPrice != null &&
                           item.mrp != null &&
@@ -498,7 +543,6 @@ class HomeScreen extends GetView<DashboardController> {
                   ),
                 ),
               ),
-
               Text(
                 "SORT BY",
                 style: context.textStyle.labelMedium?.copyWith(
@@ -546,7 +590,6 @@ class HomeScreen extends GetView<DashboardController> {
                 color: context.colorScheme.onSurface,
               ),
             ),
-
             Radio<int>(
               value: index,
               groupValue: selectedSort.value,

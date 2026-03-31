@@ -23,7 +23,7 @@ class DashboardController extends GetxController{
   final productState = UiState<List<ProductResponse>>.none().obs;
   final customerPortalState = UiState<List<CustomerPortalRes>>.none().obs;
   final categoryState = UiState<List<ProductCategoryRes>>.none().obs;
-
+  final isSearching = false.obs;
   var selectedCategoryId = RxnInt();
   var selectedBrandId = RxnInt();
   var priceRange = const RangeValues(0, 999999).obs;
@@ -56,6 +56,7 @@ class DashboardController extends GetxController{
     repo.getProducts((state) {
       productState.value = state;
       state.handleWithErrorBox(
+
           showLoader: true, (data) {}
       );
     });
@@ -82,11 +83,12 @@ class DashboardController extends GetxController{
   }
 
   void searchProducts(String query) {
+    isSearching.value = query.isNotEmpty;
     if (query.isEmpty) {
       fetchProducts();
     } else {
       repo.getProducts(
-        (state) {
+            (state) {
           productState.value = state;
         },
         search: query,

@@ -1,4 +1,5 @@
 import 'package:flutter_demo/modules/auth/signup/signup_screen.dart';
+import 'package:flutter_demo/modules/onboarding/onboarding_controller.dart';
 import 'package:flutter_demo/modules/product/data/repo/product_detail_repo.dart';
 import 'package:flutter_demo/modules/product/details/product_details_controller.dart';
 import 'package:flutter_demo/modules/product/details/product_details_screen.dart';
@@ -30,7 +31,12 @@ class AppPages {
   AppPages._();
 
   static final List<GetPage> pages = [
-    GetPage(name: AppRoutes.onboarding, page: () => OnboardingScreen()),
+    GetPage(
+        name: AppRoutes.onboarding, page: () => OnboardingScreen(),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => OnboardingController());
+      }),
+    ),
     GetPage(
       name: AppRoutes.login,
       page: () => LoginScreen(),

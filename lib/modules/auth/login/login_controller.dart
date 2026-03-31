@@ -16,8 +16,8 @@ class LoginController extends GetxController{
   final AuthRepo repo;
   LoginController({required this.repo});
 
-  final mobileNumberController = TextEditingController(text: "9454861141");
-  final passwordController = TextEditingController(text: "123456");
+  final mobileNumberController = TextEditingController();
+  final passwordController = TextEditingController();
   final isLoading = false.obs;
   final formKey = GlobalKey<FormState>();
   final rememberMe = false.obs;

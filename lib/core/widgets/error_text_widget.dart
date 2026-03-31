@@ -18,7 +18,7 @@ class ErrorTextWidget extends StatelessWidget {
     this.mainAxisAlignment = MainAxisAlignment.center,
     this.broken = false,
     this.bottomBar = false,
-    this.asset = 'assets/svg/no_data.json',
+    this.asset = 'assets/images/empty_box.png',
   });
 
   final MainAxisSize mainAxisSize;
@@ -37,7 +37,7 @@ class ErrorTextWidget extends StatelessWidget {
         mainAxisAlignment: mainAxisAlignment,
         mainAxisSize: mainAxisSize,
         children: [
-          Lottie.asset(height: 60.0, width: 60.0, asset, fit: BoxFit.fill),
+          Image.asset(height: 80.0, width: 80.0, asset, fit: BoxFit.fill),
           Text(
             msg.tr,
             style: context.textStyle.bodyLarge,

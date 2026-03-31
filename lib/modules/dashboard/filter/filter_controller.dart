@@ -32,8 +32,8 @@ void onReady() {
     super.onReady();
    /* fetchCategory();
     fetchBrand();*/
-    CommonController.to.fetchCategory(isRefresh: true);
-    CommonController.to.fetchBrand(isRefresh: true);
+    CommonController.to.fetchCategory(/*isRefresh: true*/);
+    CommonController.to.fetchBrand(/*isRefresh: true*/);
   }
 
   void toggleCategory(int id) {

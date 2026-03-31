@@ -112,7 +112,7 @@ class ProductDetailsScreen extends GetView<ProductDetailsController> {
                             context,
                             icon: Icons.access_time_outlined,
                             label: 'DURATION',
-                            value: '${data.maxDuration ?? 0} Months',
+                            value: '${data.maxDuration ?? 0} ${data.durationType ?? ""}',
                           ),
                         ),
                       ],

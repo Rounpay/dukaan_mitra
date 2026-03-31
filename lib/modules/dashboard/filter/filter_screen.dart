@@ -32,7 +32,6 @@ class FilterScreen extends GetView<FilterController> {
           ),
         ),
       ),
-
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -44,6 +43,7 @@ class FilterScreen extends GetView<FilterController> {
             priceSection(context),
             divider(),
             brandSection(context),
+            const SizedBox(height: 100),
           ],
         ),
       ),
@@ -65,23 +65,21 @@ class FilterScreen extends GetView<FilterController> {
                 ),
               ),
               Spacing.h8,
-              ...List.generate(
-                  data.length, (index) {
-                final item = data[index
-                ];
-                return Row(
-                  children: [
-                    Checkbox(
-                      value:
-                          controller.selectedCategoryId.value ==
-                          item.categoryId,
-                      onChanged: (_) {
-                        controller.toggleCategory(item.categoryId!);
-                      },
-                    ),
-                    Spacing.w8,
-                    Text(item.categoryName ?? ""),
-                  ],
+              ...List.generate(data.length, (index) {
+                final item = data[index];
+                return Obx(
+                      () => Row(
+                    children: [
+                      Checkbox(
+                        value: controller.selectedCategoryId.value == item.categoryId,
+                        onChanged: (_) {
+                          controller.toggleCategory(item.categoryId!);
+                        },
+                      ),
+                      Spacing.w8,
+                      Text(item.categoryName ?? ""),
+                    ],
+                  ),
                 );
               }),
             ],
@@ -103,7 +101,6 @@ class FilterScreen extends GetView<FilterController> {
         children: [
           Text('Price Range', style: context.textStyle.titleMedium),
           Spacing.h8,
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -116,7 +113,6 @@ class FilterScreen extends GetView<FilterController> {
             min: 0,
             max: controller.maxPrice.value,
             onChanged: controller.updatePrice,
-            //  onChanged: controller.updatePrice,
           ),
         ],
       );
@@ -134,18 +130,19 @@ class FilterScreen extends GetView<FilterController> {
               Spacing.h8,
               ...List.generate(brand.length, (index) {
                 final item = brand[index];
-
-                return Row(
-                  children: [
-                    Checkbox(
-                      value: controller.selectedBrandId.value == item.brandId,
-                      onChanged: (_) {
-                        controller.toggleBrand(item.brandId!);
-                      },
-                    ),
-                    Spacing.w8,
-                    Text(item.brandName ?? ""),
-                  ],
+                return Obx(
+                      () => Row(
+                    children: [
+                      Checkbox(
+                        value: controller.selectedBrandId.value == item.brandId,
+                        onChanged: (_) {
+                          controller.toggleBrand(item.brandId!);
+                        },
+                      ),
+                      Spacing.w8,
+                      Text(item.brandName ?? ""),
+                    ],
+                  ),
                 );
               }),
             ],
@@ -157,66 +154,86 @@ class FilterScreen extends GetView<FilterController> {
       );
     });
   }
+
   Widget _buildFilterBottomBar(BuildContext context) {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: controller.resetFilters,
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  side: BorderSide(color: context.colorScheme.primary),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+        child: Obx(() {
+          final isActive =
+              controller.selectedCategoryId.value != null ||
+                  controller.selectedBrandId.value != null ||
+                  controller.priceRange.value.start != 0 ||
+                  controller.priceRange.value.end != 999999;
+          return Row(
+            children: [
+              AnimatedSize(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                child: isActive
+                    ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    OutlinedButton(
+                      onPressed: controller.resetFilters,
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 20),
+                        side: BorderSide(
+                            color: context.colorScheme.primary),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        'Reset',
+                        style: context.textStyle.bodyMedium?.copyWith(
+                          color: context.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Spacing.w16,
+                  ],
+                )
+                    : const SizedBox.shrink(),
+              ),
+
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.back(
+                      result: {
+                        "categoryId": controller.selectedCategoryId.value,
+                        "brandId": controller.selectedBrandId.value,
+                        "minPrice": controller.priceRange.value.start,
+                        "maxPrice": controller.priceRange.value.end,
+                      },
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ThemeColors.bottomNavigationColor,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                ),
-                child: Text(
-                  'Reset',
-                  style: context.textStyle.bodyMedium?.copyWith(
-                    color: context.colorScheme.primary,
-                    fontWeight: FontWeight.w600,
+                  child: Text(
+                    'Show Results',
+                    style: context.textStyle.bodyMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Spacing.w16,
-            Expanded(
-              flex: 2,
-              child: ElevatedButton(
-                onPressed: () {
-                  Get.back(
-                    result: {
-                      "categoryId": controller.selectedCategoryId.value,
-                      "brandId": controller.selectedBrandId.value,
-                      "minPrice": controller.priceRange.value.start,
-                      "maxPrice": controller.priceRange.value.end,
-                    },
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: ThemeColors.bottomNavigationColor,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: Text(
-                  'Show Results',
-                  style: context.textStyle.bodyMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+            ],
+          );
+        }),
       ),
     );
   }
+
   Widget divider() {
     return const Padding(
       padding: EdgeInsets.symmetric(vertical: 20),

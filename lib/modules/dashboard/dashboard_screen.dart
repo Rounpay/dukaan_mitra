@@ -11,21 +11,22 @@ class DashboardScreen extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+      backgroundColor: Colors.transparent, // 👈 add this
+      extendBody: true,
       body: Obx(
-            () => IndexedStack(
+        () => IndexedStack(
           index: controller.currentIndex.value,
           children: controller.pages,
         ),
       ),
-      bottomNavigationBar:
-      SafeArea(
-        child: Obx((){return FloatingNavBar(
-          selectedIndex: controller.currentIndex.value,
-          onTap: controller.changeIndex,
-        );})
+      bottomNavigationBar: SafeArea(
+        child: Obx(() {
+          return FloatingNavBar(
+            selectedIndex: controller.currentIndex.value,
+            onTap: controller.changeIndex,
+          );
+        }),
       ),
     );
   }
-  
 }

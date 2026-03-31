@@ -21,150 +21,152 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
     return Scaffold(
       appBar: AppBar(title: Text("Personal Details"), centerTitle: true),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(
-              child: Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  Obx(() {
-                    return CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.grey.shade200,
-                      backgroundImage: controller.profileImage.value != null
-                          ? FileImage(controller.profileImage.value!)
-                          : null,
-                    );
-                  }),
-                  Positioned(
-                    bottom: 4,
-                    right: 4,
-                    child: GestureDetector(
-                      onTap: () => showImagePickerSheet(context),
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 2),
-                        ),
-                        child: const Icon(
-                          Icons.camera_alt,
-                          size: 18,
-                          color: Colors.white,
+        child: SafeArea(
+          child: Column(
+            children: [
+              Center(
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    Obx(() {
+                      return CircleAvatar(
+                        radius: 60,
+                        backgroundColor: Colors.grey.shade200,
+                        backgroundImage: controller.profileImage.value != null
+                            ? FileImage(controller.profileImage.value!)
+                            : null,
+                      );
+                    }),
+                    Positioned(
+                      bottom: 4,
+                      right: 4,
+                      child: GestureDetector(
+                        onTap: () => showImagePickerSheet(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          child: const Icon(
+                            Icons.camera_alt,
+                            size: 18,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Spacing.h32,
-            _SectionLabel(label: 'Full Name'),
-            TextFieldWithLabel(
-              controller: controller.fullNameController,
-              textInputType: TextInputType.name,
-              autofillHints: const [AutofillHints.name],
-              hint: "Enter Your Full Name",
-              validator: (value) => (value?.trim().length ?? 0) < 3
-                  ? "Enter valid full name"
-                  : null,
-              prefix: Icon(
-                Icons.person_outline,
-                color: context.colorScheme.primaryContainer,
-              ),
-            ),
-            Spacing.h8,
-
-            _SectionLabel(label: 'Mobile Number'),
-            TextFieldWithLabel(
-              controller: controller.mobileNumberController,
-              textInputType: TextInputType.phone,
-              autofillHints: const [AutofillHints.telephoneNumber],
-              hint: "Enter Your Mobile Number",
-              textInputFormatter: [
-                LengthLimitingTextInputFormatter(10),
-                FilteringTextInputFormatter.digitsOnly,
-              ],
-              validator: (value) => (value?.length ?? 0) != 10
-                  ? "Enter valid 10-digit mobile number"
-                  : null,
-              prefix: Icon(
-                Icons.phone_outlined,
-                color: context.colorScheme.primaryContainer,
-              ),
-            ),
-            Spacing.h8,
-
-            _SectionLabel(label: 'Email'),
-            TextFieldWithLabel(
-              controller: controller.emailController,
-              textInputType: TextInputType.emailAddress,
-              autofillHints: const [AutofillHints.email],
-              hint: "Enter Your Email",
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) return null;
-                final emailRegex = RegExp(
-                  r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-                );
-                return emailRegex.hasMatch(value) ? null : "Enter valid email";
-              },
-              prefix: Icon(
-                Icons.mail_outline,
-                color: context.colorScheme.primaryContainer,
-              ),
-            ),
-
-            Spacing.h12,
-            _SectionLabel(label: 'Uploaded Documents'),
-            Spacing.h8,
-            Obx(() {
-              final state = CommonController.to.profileState.value;
-              return state.when(
-                success: (data) {
-                  final docs = data.documents ?? [];
-                  return ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: docs.length,
-                    separatorBuilder: (_, _) => Spacing.h12,
-                    itemBuilder: (context, index) {
-                      final doc = docs[index];
-                      return _DocCard(
-                        name: doc.documentName ?? '',
-                        status: doc.verificationStatus ?? 'Pending',
-                        filePath: doc.filePath,
-                        uploadedDate: doc.uploadedDate,
-                      );
-                    },
-                  );
-                },
-                loading: () => Center(child: Loader()),
-                error: (error) => ErrorTextWidget(msg: error),
-                none: () => const SizedBox(),
-              );
-            }),
-
-            Spacing.h12,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SizedBox(
-                height: 50,
-                child: RoundedButton(
-                  text: "Save",
-                  width: double.infinity,
-                  radius: 10,
-                  backgroundColor: context.colorScheme.primary,
-                  foregroundColor: context.colorScheme.surface,
-                  onPressed: () {
-                    //  controller.updateProfile();
-                  },
+                  ],
                 ),
               ),
-            ),
-            Spacing.h80,
-          ],
+              Spacing.h32,
+              _SectionLabel(label: 'Full Name'),
+              TextFieldWithLabel(
+                controller: controller.fullNameController,
+                textInputType: TextInputType.name,
+                autofillHints: const [AutofillHints.name],
+                hint: "Enter Your Full Name",
+                validator: (value) => (value?.trim().length ?? 0) < 3
+                    ? "Enter valid full name"
+                    : null,
+                prefix: Icon(
+                  Icons.person_outline,
+                  color: context.colorScheme.primaryContainer,
+                ),
+              ),
+              Spacing.h8,
+          
+              _SectionLabel(label: 'Mobile Number'),
+              TextFieldWithLabel(
+                controller: controller.mobileNumberController,
+                textInputType: TextInputType.phone,
+                autofillHints: const [AutofillHints.telephoneNumber],
+                hint: "Enter Your Mobile Number",
+                textInputFormatter: [
+                  LengthLimitingTextInputFormatter(10),
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                validator: (value) => (value?.length ?? 0) != 10
+                    ? "Enter valid 10-digit mobile number"
+                    : null,
+                prefix: Icon(
+                  Icons.phone_outlined,
+                  color: context.colorScheme.primaryContainer,
+                ),
+              ),
+              Spacing.h8,
+          
+              _SectionLabel(label: 'Email'),
+              TextFieldWithLabel(
+                controller: controller.emailController,
+                textInputType: TextInputType.emailAddress,
+                autofillHints: const [AutofillHints.email],
+                hint: "Enter Your Email",
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) return null;
+                  final emailRegex = RegExp(
+                    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                  );
+                  return emailRegex.hasMatch(value) ? null : "Enter valid email";
+                },
+                prefix: Icon(
+                  Icons.mail_outline,
+                  color: context.colorScheme.primaryContainer,
+                ),
+              ),
+          
+              Spacing.h12,
+              _SectionLabel(label: 'Uploaded Documents'),
+              Spacing.h8,
+              Obx(() {
+                final state = CommonController.to.profileState.value;
+                return state.when(
+                  success: (data) {
+                    final docs = data.documents ?? [];
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: docs.length,
+                      separatorBuilder: (_, _) => Spacing.h12,
+                      itemBuilder: (context, index) {
+                        final doc = docs[index];
+                        return _DocCard(
+                          name: doc.documentName ?? '',
+                          status: doc.verificationStatus ?? 'Pending',
+                          filePath: doc.filePath,
+                          uploadedDate: doc.uploadedDate,
+                        );
+                      },
+                    );
+                  },
+                  loading: () => Center(child: Loader()),
+                  error: (error) => ErrorTextWidget(msg: error),
+                  none: () => const SizedBox(),
+                );
+              }),
+          
+              Spacing.h12,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SizedBox(
+                  height: 50,
+                  child: RoundedButton(
+                    text: "Save",
+                    width: double.infinity,
+                    radius: 10,
+                    backgroundColor: context.colorScheme.primary,
+                    foregroundColor: context.colorScheme.surface,
+                    onPressed: () {
+                      //  controller.updateProfile();
+                    },
+                  ),
+                ),
+              ),
+              Spacing.h80,
+            ],
+          ),
         ),
       ),
     );
@@ -315,9 +317,7 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
 
 class _SectionLabel extends StatelessWidget {
   final String label;
-
   const _SectionLabel({required this.label});
-
   @override
   Widget build(BuildContext context) {
     return Align(

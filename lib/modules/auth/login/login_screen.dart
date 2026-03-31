@@ -107,7 +107,7 @@ class LoginScreen extends GetView<LoginController> {
                     validator: (value) =>
                         value?.isEmpty == true ? "Password is required" : null,
                   ),
-                  Row(
+               /*   Row(
                     children: [
                       Spacing.w8,
                       Obx(
@@ -118,17 +118,18 @@ class LoginScreen extends GetView<LoginController> {
                       ),
                       Text("Remember me", style: context.textStyle.bodyMedium),
                       Spacer(),
-                      /* TextButton(
+                      *//* TextButton(
                         onPressed: () {},
                         child: Text("Forgot Password?"),
-                      ),*/
+                      ),*//*
                       Spacing.w8,
                     ],
-                  ),
+                  ),*/
+                  Spacing.h16,
                   SafeArea(
                     top: false,
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(12.0),
                       child: Obx(
                         () => RoundedButton(
                           radius: 10,

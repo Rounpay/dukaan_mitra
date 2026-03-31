@@ -27,7 +27,7 @@ class ApiClient extends GetConnect with Printer {
     httpClient.timeout = const Duration(seconds: 60);
 
     httpClient.addRequestModifier<dynamic>((request) {
-/*      request.headers['appVersion'] = '5';
+      /*      request.headers['appVersion'] = '5';
       request.headers['timezone'] = getTimeZoneOffset();*/
       if (CommonController.to.userData.value?.accessToken != null) {
         request.headers['Authorization'] =
@@ -59,6 +59,7 @@ class ApiClient extends GetConnect with Printer {
       (json) => UserData.fromJson(json),
     );
   }
+
   Future<BaseRes> customerSignup(FormData body) async {
     final response = await post("Customer/signup", body);
     return ApiResponseHandler.parseBaseRes(response);
@@ -68,7 +69,7 @@ class ApiClient extends GetConnect with Printer {
     final response = await get('Customer/required-documents');
     return ApiResponseHandler.parse<List<DocumentTypeResponse>>(
       response,
-          (json) => (json as List<dynamic>)
+      (json) => (json as List<dynamic>)
           .map((e) => DocumentTypeResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -83,7 +84,7 @@ class ApiClient extends GetConnect with Printer {
     final response = await get('Customer/my-profile');
     return ApiResponseHandler.parse<UserProfileModel>(
       response,
-          (json) => UserProfileModel.fromJson(json as Map<String, dynamic>),
+      (json) => UserProfileModel.fromJson(json as Map<String, dynamic>),
     );
   }
 
@@ -104,17 +105,19 @@ class ApiClient extends GetConnect with Printer {
     final response = await get('Product', query: query);
     return ApiResponseHandler.parse<List<ProductResponse>>(
       response,
-          (json) => (json as List<dynamic>)
+      (json) => (json as List<dynamic>)
           .map((e) => ProductResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
   }
 
-  Future<BaseDataRes<ProductDetailModel>> getProductDetails(int productId) async {
+  Future<BaseDataRes<ProductDetailModel>> getProductDetails(
+    int productId,
+  ) async {
     final response = await get('Product/$productId');
     return ApiResponseHandler.parse<ProductDetailModel>(
       response,
-          (json) => ProductDetailModel.fromJson(json as Map<String, dynamic>),
+      (json) => ProductDetailModel.fromJson(json as Map<String, dynamic>),
     );
   }
 
@@ -122,7 +125,7 @@ class ApiClient extends GetConnect with Printer {
     final response = await get('Brand');
     return ApiResponseHandler.parse<List<BrandResponse>>(
       response,
-          (json) => (json as List<dynamic>)
+      (json) => (json as List<dynamic>)
           .map((e) => BrandResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -132,7 +135,7 @@ class ApiClient extends GetConnect with Printer {
     final response = await get('Category');
     return ApiResponseHandler.parse<List<ProductCategoryRes>>(
       response,
-          (json) => (json as List<dynamic>)
+      (json) => (json as List<dynamic>)
           .map((e) => ProductCategoryRes.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
@@ -147,16 +150,22 @@ class ApiClient extends GetConnect with Printer {
     final response = await get('CustomerPortal/myloans');
     return ApiResponseHandler.parse<List<CustomerPortalRes>>(
       response,
-          (json) => (json as List<dynamic>)
+      (json) => (json as List<dynamic>)
           .map((e) => CustomerPortalRes.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
   }
+
   Future<BaseDataRes<PurchaseDataRes>> getLoanDetails(int loanId) async {
     final response = await get('CustomerPortal/loan/$loanId');
     return ApiResponseHandler.parse<PurchaseDataRes>(
       response,
-          (json) => PurchaseDataRes.fromJson(json as Map<String, dynamic>),
+      (json) => PurchaseDataRes.fromJson(json as Map<String, dynamic>),
     );
+  }
+
+  Future<BaseRes> changePassword(Object body) async {
+    final response = await post('Auth/change-password',body);
+    return ApiResponseHandler.parseBaseRes(response);
   }
 }

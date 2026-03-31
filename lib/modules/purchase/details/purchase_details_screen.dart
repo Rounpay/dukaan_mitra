@@ -10,6 +10,9 @@ import 'package:flutter_demo/core/widgets/loader.dart';
 import 'package:flutter_demo/modules/purchase/data/purchase_data_res.dart';
 import 'package:flutter_demo/modules/purchase/details/purchase_controller.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+
+import '../../../core/utils/DateTimeUtil.dart';
 
 class PurchaseDetailsScreen extends GetView<PurchaseController> {
   const PurchaseDetailsScreen({super.key});
@@ -19,90 +22,151 @@ class PurchaseDetailsScreen extends GetView<PurchaseController> {
     return Scaffold(
       appBar: AppBar(title: Text("Purchase Details")),
       body: SafeArea(
-        child: Obx((){
+        child: Obx(() {
           return controller.loanState.value.when(
-              success: (data) {
-                return SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Column(
-                    children: [
-                      productCard(context,data),
-                      Spacing.h16,
-                      Row(
-                        children: [
-                          _StatCard(
-                            icon: Icons.percent,
-                            label: 'Interest',
-                            value:"${(data.info?.interestRate ?? 0).toStringAsFixed(0)}%",
+            success: (data) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                child: Column(
+                  children: [
+                    productCard(context, data),
+                    Spacing.h16,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          color: context.colorScheme.surface,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: context.colorScheme.outlineVariant,
                           ),
-                          Spacing.w12,
-                          _StatCard(
-                            icon: Icons.calendar_today_outlined,
-                            label: 'Daily EMI',
-                            value:  "₹${(data.emiSchedule?.elementAt(0).emiAmount ?? 0).toStringAsFixed(0)}",
-
-                          ),
-                        ],
-                      ),
-                      Spacing.h24,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'EMI Schedule',
-                            style: context.textStyle.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w700,
-                              color: context.colorScheme.onSurface,
-                            ),
-                          ),
-
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: context.colorScheme.surfaceVariant,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: context.colorScheme.outlineVariant,
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade50,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.grey.shade200),
+                              ),
+                              child: const Icon(
+                                Icons.account_balance_wallet_outlined,
+                                size: 20,
+                                color: Color(0xFF0D2353),
                               ),
                             ),
-                            child: Text(
-                              "${data.info?.numberOfInstallment ?? ''} Installments",
-                              style: context.textStyle.labelSmall?.copyWith(
-                                color: context.colorScheme.onSurfaceVariant,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            Spacing.w12,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'OUTSTANDING AMOUNT',
+                                  style: context.textStyle.labelSmall?.copyWith(
+                                    color: context.colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                                Spacing.h4,
+                                Text(
+                                  '₹ ${data.snapshot?.outstandingAmount ?? 0}',
+                                  style: context.textStyle.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Spacer(),
+                            Icon(
+                              Icons.info_outline,
+                              color: context.colorScheme.onSurfaceVariant,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Spacing.h12,
+                    Row(
+                      children: [
+                        _StatCard(
+                          icon: Icons.payments,
+                          label: 'Total Paid',
+                          value: "${(data.snapshot?.totalPaid ?? 0).toStringAsFixed(0)}",
+                        ),
+                        Spacing.w12,
+                        _StatCard(
+                          icon: Icons.calendar_today_outlined,
+                          label: 'Daily EMI',
+                          value:
+                              "₹${(data.emiSchedule?.elementAt(0).emiAmount ?? 0).toStringAsFixed(0)}",
+                        ),
+                      ],
+                    ),
+                    Spacing.h24,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'EMI Schedule',
+                          style: context.textStyle.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: context.colorScheme.onSurface,
+                          ),
+                        ),
+
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: context.colorScheme.surfaceVariant,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: context.colorScheme.outlineVariant,
                             ),
                           ),
-                        ],
-                      ),
-                      Spacing.h24,
-                      ListView.builder(
-                        itemCount: data.emiSchedule?.length,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          final item = data.emiSchedule![index];
-                          return _buildEmiTile(context, index,item);
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
-              error: (error)=>ErrorTextWidget(msg: error),
-              loading:()=> Loader(),
-              none: ()=>SizedBox()
+                          child: Text(
+                            "${data.info?.numberOfInstallment ?? ''} Installments",
+                            style: context.textStyle.labelSmall?.copyWith(
+                              color: context.colorScheme.onSurfaceVariant,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacing.h24,
+                    ListView.builder(
+                      itemCount: data.emiSchedule?.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final item = data.emiSchedule![index];
+                        return _buildEmiTile(context, index, item);
+                      },
+                    ),
+                  ],
+                ),
+              );
+            },
+            error: (error) => ErrorTextWidget(msg: error),
+            loading: () => Loader(),
+            none: () => SizedBox(),
           );
-        })
+        }),
       ),
     );
   }
 
-  Widget productCard(BuildContext context, PurchaseDataRes data,) {
-
+  Widget productCard(BuildContext context, PurchaseDataRes data) {
     return Container(
       decoration: BoxDecoration(
         color: context.colorScheme.surface,
@@ -137,7 +201,7 @@ class PurchaseDetailsScreen extends GetView<PurchaseController> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        data.info?.loanStatus??'PAYMENT COMPLETED',
+                        data.info?.loanStatus ?? 'PAYMENT COMPLETED',
                         style: context.textStyle.labelSmall?.copyWith(
                           color: Colors.white,
                           letterSpacing: 0.5,
@@ -146,7 +210,15 @@ class PurchaseDetailsScreen extends GetView<PurchaseController> {
                     ),
                     Spacing.h12,
                     Text(
-                      data.info?.productName??'Godrej 87 L Edge Cool Blast Desert Air Cooler',
+                      data.info?.brandName ?? "",
+                      style: context.textStyle.labelSmall?.copyWith(
+                        color: context.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    Spacing.h8,
+                    Text(
+                      data.info?.productName ??
+                          'Godrej 87 L Edge Cool Blast Desert Air Cooler',
                       style: context.textStyle.titleMedium,
                     ),
                   ],
@@ -163,7 +235,7 @@ class PurchaseDetailsScreen extends GetView<PurchaseController> {
                     data.info?.productImage?.firstOrNull?.imagePath ?? '',
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      return    Icon(
+                      return Icon(
                         Icons.image_not_supported_outlined,
                         size: 40,
                         color: context.colorScheme.outline,
@@ -174,26 +246,26 @@ class PurchaseDetailsScreen extends GetView<PurchaseController> {
               ),
             ],
           ),
-         Spacing.h24,
+          Spacing.h24,
           Divider(height: 1, color: context.colorScheme.outlineVariant),
-       Spacing.h16,
+          Spacing.h16,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _LabelValue(
                 label: 'PURCHASE AMOUNT',
-                value:  "₹ ${data.info?.loanAmount ?? 15990}",
+                value: "₹ ${data.info?.loanAmount ?? 15990}",
                 isLarge: true,
               ),
               Container(
-
                 width: 1,
                 margin: const EdgeInsets.symmetric(horizontal: 12),
                 color: context.colorScheme.outlineVariant,
               ),
               _LabelValue(
                 label: 'DURATION',
-                value: "${data.info?.duration ?? ''} ${data.info?.durationType ?? ''}",
+                value:
+                    "${data.info?.duration ?? ''} ${data.info?.durationType ?? ''}",
                 isLarge: true,
                 align: CrossAxisAlignment.end,
               ),
@@ -238,14 +310,16 @@ class PurchaseDetailsScreen extends GetView<PurchaseController> {
                     ),
                     Spacing.h4,
                     Text(
-                      item.dueDate ?? '',
-                      style: context.textStyle.bodySmall,
-                    ),
+                      item.dueDate.toDateTime()?.toStr(format: 'dd MMM yyyy') ?? '',
+                    )
                   ],
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: isPaid
                       ? Colors.green.shade100
@@ -266,7 +340,8 @@ class PurchaseDetailsScreen extends GetView<PurchaseController> {
         ),
       ],
     );
-  }}
+  }
+}
 
 class _LabelValue extends StatelessWidget {
   final String label;
@@ -298,13 +373,13 @@ class _LabelValue extends StatelessWidget {
           value,
           style: isLarge
               ? context.textStyle.titleMedium?.copyWith(
-            color: context.colorScheme.onSurface,
-            fontWeight: FontWeight.w700,
-          )
+                  color: context.colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                )
               : context.textStyle.bodyMedium?.copyWith(
-            color: context.colorScheme.onSurface,
-            fontWeight: FontWeight.w600,
-          ),
+                  color: context.colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
         ),
       ],
     );
@@ -332,7 +407,6 @@ class _StatCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: context.colorScheme.surfaceContainer,
           borderRadius: BorderRadius.circular(14),
-
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

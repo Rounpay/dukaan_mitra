@@ -45,45 +45,47 @@ class PurchaseHistory extends GetView<DashboardController> {
             ],
           ),
         ),
-        body: Obx(() {
-          final state = controller.customerPortalState.value;
-          return state.when(
-            none: () => const SizedBox(),
-            loading: () => const Center(child: Loader()),
-            error: (msg) => Center(child: ErrorTextWidget(msg: msg)),
-            success: (data) {
-              final pending = data
-                  .where(
-                    (e) =>
-                        PurchaseType.fromStatusId(e.loanStatusId) ==
-                        PurchaseType.pending,
-                  )
-                  .toList();
-              final completed = data
-                  .where(
-                    (e) =>
-                        PurchaseType.fromStatusId(e.loanStatusId) ==
-                        PurchaseType.completed,
-                  )
-                  .toList();
-              final canceled = data
-                  .where(
-                    (e) =>
-                        PurchaseType.fromStatusId(e.loanStatusId) ==
-                        PurchaseType.canceled,
-                  )
-                  .toList();
-
-              return TabBarView(
-                children: [
-                  _buildList(context, pending, PurchaseType.pending),
-                  _buildList(context, completed, PurchaseType.completed),
-                  _buildList(context, canceled, PurchaseType.canceled),
-                ],
-              );
-            },
-          );
-        }),
+        body: SafeArea(
+          child: Obx(() {
+            final state = controller.customerPortalState.value;
+            return state.when(
+              none: () => const SizedBox(),
+              loading: () => const Center(child: Loader()),
+              error: (msg) => Center(child: ErrorTextWidget(msg: msg)),
+              success: (data) {
+                final pending = data
+                    .where(
+                      (e) =>
+                          PurchaseType.fromStatusId(e.loanStatusId) ==
+                          PurchaseType.pending,
+                    )
+                    .toList();
+                final completed = data
+                    .where(
+                      (e) =>
+                          PurchaseType.fromStatusId(e.loanStatusId) ==
+                          PurchaseType.completed,
+                    )
+                    .toList();
+                final canceled = data
+                    .where(
+                      (e) =>
+                          PurchaseType.fromStatusId(e.loanStatusId) ==
+                          PurchaseType.canceled,
+                    )
+                    .toList();
+          
+                return TabBarView(
+                  children: [
+                    _buildList(context, pending, PurchaseType.pending),
+                    _buildList(context, completed, PurchaseType.completed),
+                    _buildList(context, canceled, PurchaseType.canceled),
+                  ],
+                );
+              },
+            );
+          }),
+        ),
       ),
     );
   }
