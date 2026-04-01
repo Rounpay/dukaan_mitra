@@ -12,6 +12,7 @@ _UserData _$UserDataFromJson(Map<String, dynamic> json) => _UserData(
   expiresAt: json['expiresAt'] as String?,
   resetRequired: json['resetRequired'] as bool?,
   role: json['role'] as String?,
+  roleId: (json['roleId'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$UserDataToJson(_UserData instance) => <String, dynamic>{
@@ -20,4 +21,5 @@ Map<String, dynamic> _$UserDataToJson(_UserData instance) => <String, dynamic>{
   'expiresAt': instance.expiresAt,
   'resetRequired': instance.resetRequired,
   'role': instance.role,
+  'roleId': instance.roleId,
 };

@@ -14,12 +14,12 @@ class OnboardingController extends GetxController {
   ];
 
   final List<String> subtitles = [
-    "Manage all your payments easily in one place",
-    "Keep track of your daily transactions",
+    "Manage all your purchases and stock in one place",
+    "Keep track of daily buying and inventory updates",
   ];
   final List<String> images = [
-    "assets/images/img.png",
-    "assets/images/img.png",
+    "assets/images/onboarding.png",
+    "assets/images/onboarding.png",
   ];
   int get totalPages => titles.length;
   bool get isLastPage => currentIndex.value == totalPages - 1;
@@ -28,7 +28,6 @@ class OnboardingController extends GetxController {
   @override
   void onInit() {
     pageController = PageController();
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);

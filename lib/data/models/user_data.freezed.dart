@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserData {
 
-@JsonKey(name: 'accessToken') String? get accessToken;@JsonKey(name: 'refreshToken') String? get refreshToken;@JsonKey(name: 'expiresAt') String? get expiresAt;@JsonKey(name: 'resetRequired') bool? get resetRequired;@JsonKey(name: 'role') String? get role;
+@JsonKey(name: 'accessToken') String? get accessToken;@JsonKey(name: 'refreshToken') String? get refreshToken;@JsonKey(name: 'expiresAt') String? get expiresAt;@JsonKey(name: 'resetRequired') bool? get resetRequired;@JsonKey(name: 'role') String? get role;@JsonKey(name: 'roleId') int? get roleId;
 /// Create a copy of UserData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserDataCopyWith<UserData> get copyWith => _$UserDataCopyWithImpl<UserData>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserData&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.resetRequired, resetRequired) || other.resetRequired == resetRequired)&&(identical(other.role, role) || other.role == role));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserData&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.resetRequired, resetRequired) || other.resetRequired == resetRequired)&&(identical(other.role, role) || other.role == role)&&(identical(other.roleId, roleId) || other.roleId == roleId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accessToken,refreshToken,expiresAt,resetRequired,role);
+int get hashCode => Object.hash(runtimeType,accessToken,refreshToken,expiresAt,resetRequired,role,roleId);
 
 @override
 String toString() {
-  return 'UserData(accessToken: $accessToken, refreshToken: $refreshToken, expiresAt: $expiresAt, resetRequired: $resetRequired, role: $role)';
+  return 'UserData(accessToken: $accessToken, refreshToken: $refreshToken, expiresAt: $expiresAt, resetRequired: $resetRequired, role: $role, roleId: $roleId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserDataCopyWith<$Res>  {
   factory $UserDataCopyWith(UserData value, $Res Function(UserData) _then) = _$UserDataCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'accessToken') String? accessToken,@JsonKey(name: 'refreshToken') String? refreshToken,@JsonKey(name: 'expiresAt') String? expiresAt,@JsonKey(name: 'resetRequired') bool? resetRequired,@JsonKey(name: 'role') String? role
+@JsonKey(name: 'accessToken') String? accessToken,@JsonKey(name: 'refreshToken') String? refreshToken,@JsonKey(name: 'expiresAt') String? expiresAt,@JsonKey(name: 'resetRequired') bool? resetRequired,@JsonKey(name: 'role') String? role,@JsonKey(name: 'roleId') int? roleId
 });
 
 
@@ -65,14 +65,15 @@ class _$UserDataCopyWithImpl<$Res>
 
 /// Create a copy of UserData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? accessToken = freezed,Object? refreshToken = freezed,Object? expiresAt = freezed,Object? resetRequired = freezed,Object? role = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? accessToken = freezed,Object? refreshToken = freezed,Object? expiresAt = freezed,Object? resetRequired = freezed,Object? role = freezed,Object? roleId = freezed,}) {
   return _then(_self.copyWith(
 accessToken: freezed == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String?,refreshToken: freezed == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
 as String?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as String?,resetRequired: freezed == resetRequired ? _self.resetRequired : resetRequired // ignore: cast_nullable_to_non_nullable
 as bool?,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,roleId: freezed == roleId ? _self.roleId : roleId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'accessToken')  String? accessToken, @JsonKey(name: 'refreshToken')  String? refreshToken, @JsonKey(name: 'expiresAt')  String? expiresAt, @JsonKey(name: 'resetRequired')  bool? resetRequired, @JsonKey(name: 'role')  String? role)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'accessToken')  String? accessToken, @JsonKey(name: 'refreshToken')  String? refreshToken, @JsonKey(name: 'expiresAt')  String? expiresAt, @JsonKey(name: 'resetRequired')  bool? resetRequired, @JsonKey(name: 'role')  String? role, @JsonKey(name: 'roleId')  int? roleId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserData() when $default != null:
-return $default(_that.accessToken,_that.refreshToken,_that.expiresAt,_that.resetRequired,_that.role);case _:
+return $default(_that.accessToken,_that.refreshToken,_that.expiresAt,_that.resetRequired,_that.role,_that.roleId);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.accessToken,_that.refreshToken,_that.expiresAt,_that.reset
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'accessToken')  String? accessToken, @JsonKey(name: 'refreshToken')  String? refreshToken, @JsonKey(name: 'expiresAt')  String? expiresAt, @JsonKey(name: 'resetRequired')  bool? resetRequired, @JsonKey(name: 'role')  String? role)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'accessToken')  String? accessToken, @JsonKey(name: 'refreshToken')  String? refreshToken, @JsonKey(name: 'expiresAt')  String? expiresAt, @JsonKey(name: 'resetRequired')  bool? resetRequired, @JsonKey(name: 'role')  String? role, @JsonKey(name: 'roleId')  int? roleId)  $default,) {final _that = this;
 switch (_that) {
 case _UserData():
-return $default(_that.accessToken,_that.refreshToken,_that.expiresAt,_that.resetRequired,_that.role);case _:
+return $default(_that.accessToken,_that.refreshToken,_that.expiresAt,_that.resetRequired,_that.role,_that.roleId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.accessToken,_that.refreshToken,_that.expiresAt,_that.reset
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'accessToken')  String? accessToken, @JsonKey(name: 'refreshToken')  String? refreshToken, @JsonKey(name: 'expiresAt')  String? expiresAt, @JsonKey(name: 'resetRequired')  bool? resetRequired, @JsonKey(name: 'role')  String? role)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'accessToken')  String? accessToken, @JsonKey(name: 'refreshToken')  String? refreshToken, @JsonKey(name: 'expiresAt')  String? expiresAt, @JsonKey(name: 'resetRequired')  bool? resetRequired, @JsonKey(name: 'role')  String? role, @JsonKey(name: 'roleId')  int? roleId)?  $default,) {final _that = this;
 switch (_that) {
 case _UserData() when $default != null:
-return $default(_that.accessToken,_that.refreshToken,_that.expiresAt,_that.resetRequired,_that.role);case _:
+return $default(_that.accessToken,_that.refreshToken,_that.expiresAt,_that.resetRequired,_that.role,_that.roleId);case _:
   return null;
 
 }
@@ -213,7 +214,7 @@ return $default(_that.accessToken,_that.refreshToken,_that.expiresAt,_that.reset
 @JsonSerializable()
 
 class _UserData implements UserData {
-  const _UserData({@JsonKey(name: 'accessToken') this.accessToken, @JsonKey(name: 'refreshToken') this.refreshToken, @JsonKey(name: 'expiresAt') this.expiresAt, @JsonKey(name: 'resetRequired') this.resetRequired, @JsonKey(name: 'role') this.role});
+  const _UserData({@JsonKey(name: 'accessToken') this.accessToken, @JsonKey(name: 'refreshToken') this.refreshToken, @JsonKey(name: 'expiresAt') this.expiresAt, @JsonKey(name: 'resetRequired') this.resetRequired, @JsonKey(name: 'role') this.role, @JsonKey(name: 'roleId') this.roleId});
   factory _UserData.fromJson(Map<String, dynamic> json) => _$UserDataFromJson(json);
 
 @override@JsonKey(name: 'accessToken') final  String? accessToken;
@@ -221,6 +222,7 @@ class _UserData implements UserData {
 @override@JsonKey(name: 'expiresAt') final  String? expiresAt;
 @override@JsonKey(name: 'resetRequired') final  bool? resetRequired;
 @override@JsonKey(name: 'role') final  String? role;
+@override@JsonKey(name: 'roleId') final  int? roleId;
 
 /// Create a copy of UserData
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserData&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.resetRequired, resetRequired) || other.resetRequired == resetRequired)&&(identical(other.role, role) || other.role == role));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserData&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.resetRequired, resetRequired) || other.resetRequired == resetRequired)&&(identical(other.role, role) || other.role == role)&&(identical(other.roleId, roleId) || other.roleId == roleId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accessToken,refreshToken,expiresAt,resetRequired,role);
+int get hashCode => Object.hash(runtimeType,accessToken,refreshToken,expiresAt,resetRequired,role,roleId);
 
 @override
 String toString() {
-  return 'UserData(accessToken: $accessToken, refreshToken: $refreshToken, expiresAt: $expiresAt, resetRequired: $resetRequired, role: $role)';
+  return 'UserData(accessToken: $accessToken, refreshToken: $refreshToken, expiresAt: $expiresAt, resetRequired: $resetRequired, role: $role, roleId: $roleId)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$UserDataCopyWith<$Res> implements $UserDataCopyWith<$Res>
   factory _$UserDataCopyWith(_UserData value, $Res Function(_UserData) _then) = __$UserDataCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'accessToken') String? accessToken,@JsonKey(name: 'refreshToken') String? refreshToken,@JsonKey(name: 'expiresAt') String? expiresAt,@JsonKey(name: 'resetRequired') bool? resetRequired,@JsonKey(name: 'role') String? role
+@JsonKey(name: 'accessToken') String? accessToken,@JsonKey(name: 'refreshToken') String? refreshToken,@JsonKey(name: 'expiresAt') String? expiresAt,@JsonKey(name: 'resetRequired') bool? resetRequired,@JsonKey(name: 'role') String? role,@JsonKey(name: 'roleId') int? roleId
 });
 
 
@@ -272,14 +274,15 @@ class __$UserDataCopyWithImpl<$Res>
 
 /// Create a copy of UserData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? accessToken = freezed,Object? refreshToken = freezed,Object? expiresAt = freezed,Object? resetRequired = freezed,Object? role = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? accessToken = freezed,Object? refreshToken = freezed,Object? expiresAt = freezed,Object? resetRequired = freezed,Object? role = freezed,Object? roleId = freezed,}) {
   return _then(_UserData(
 accessToken: freezed == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String?,refreshToken: freezed == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
 as String?,expiresAt: freezed == expiresAt ? _self.expiresAt : expiresAt // ignore: cast_nullable_to_non_nullable
 as String?,resetRequired: freezed == resetRequired ? _self.resetRequired : resetRequired // ignore: cast_nullable_to_non_nullable
 as bool?,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,roleId: freezed == roleId ? _self.roleId : roleId // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

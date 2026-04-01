@@ -6,6 +6,8 @@ import '../../../core/common_controller.dart';
 import '../../../core/network/base_res.dart';
 import '../../../core/network/ui_state.dart';
 import '../../../core/utils/common_methods.dart';
+import '../../../core/utils/extensions.dart';
+import '../../../core/widgets/ducment_picker.dart';
 import '../data/auth_repo.dart';
 import '../data/document_type_response.dart';
 
@@ -52,17 +54,17 @@ class SignupController extends GetxController {
   }
 
   Future<void> pickDocumentForType(int documentTypeId) async {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: false,
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf'],
+    await Get.bottomSheet(
+      DocumentPickerBottomSheet(
+        onFilePicked: (String path) {
+          documentFiles[documentTypeId] = path;
+          documentFiles.refresh();
+        },
+      ),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
     );
-    if (result != null && result.paths.first != null) {
-      documentFiles[documentTypeId] = result.paths.first!;
-      documentFiles.refresh();
-    }
   }
-
 
   void removeDocumentForType(int documentTypeId) {
     documentFiles.remove(documentTypeId);
@@ -134,12 +136,12 @@ class SignupController extends GetxController {
 
     repo.customerSignup(formData, (state) {
       signupState.value = state;
-      state.handleWithErrorBox(
-          showLoader: false, (data) async {
+      state.handleWithErrorBox((data) async {
         showSuccessToast("Signup Successful");
         await CommonController.to.fetchProfile(isRefresh: true);
         Get.back();
-      });
+      }, showLoader: true
+      );
     });
   }
 }

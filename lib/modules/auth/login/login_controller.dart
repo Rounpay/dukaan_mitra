@@ -39,6 +39,7 @@ class LoginController extends GetxController{
           TextInput.finishAutofillContext();
           await CommonController.to.setUserData(data);
           Get.offAllNamed(AppRoutes.dashboard);
+
         });
       },
     );

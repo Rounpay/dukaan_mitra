@@ -2,6 +2,7 @@ import 'package:flutter_demo/modules/dashboard/data/models/product_category_res.
 
 import '../../../../core/managers/network_manager.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/network/base_res.dart';
 import '../../../../core/network/ui_state.dart';
 import '../models/customer_portal_res.dart';
 import '../models/product_response.dart';
@@ -10,7 +11,7 @@ class DashboardRepo {
   Future<void> getProducts(
       void Function(UiState<List<ProductResponse>>) callback, {
         int? categoryId,
-        int? brandId,
+        String? brandId,
         double? minPrice,
         double? maxPrice,
         String? search
@@ -71,5 +72,21 @@ class DashboardRepo {
       callback(UiState.error(res.message ?? 'Error occurred'));
     }
   }
+  Future<void> changePassword(
+      Object body,
+      void Function(UiState<BaseRes>) callback,
+      ) async {
+    callback(const UiState.loading());
 
+    if (!await isNetworkAvailable()) {
+      callback(const UiState.error('No internet connection'));
+      return;
+    }
+    final res = await ApiClient.to.changePassword(body);
+    if (res.success == true) {
+      callback(UiState.success(res));
+    } else {
+      callback(UiState.error(res.message ?? 'Error occurred'));
+    }
+  }
 }

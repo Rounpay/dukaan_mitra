@@ -73,7 +73,7 @@ class FilterScreen extends GetView<FilterController> {
                       Checkbox(
                         value: controller.selectedCategoryId.value == item.categoryId,
                         onChanged: (_) {
-                          controller.toggleCategory(item.categoryId!);
+                          controller.selectedCategoryId.value = item.categoryId;
                         },
                       ),
                       Spacing.w8,
@@ -134,7 +134,7 @@ class FilterScreen extends GetView<FilterController> {
                       () => Row(
                     children: [
                       Checkbox(
-                        value: controller.selectedBrandId.value == item.brandId,
+                        value: controller.selectedBrandId.contains(item.brandId),
                         onChanged: (_) {
                           controller.toggleBrand(item.brandId!);
                         },
@@ -162,7 +162,7 @@ class FilterScreen extends GetView<FilterController> {
         child: Obx(() {
           final isActive =
               controller.selectedCategoryId.value != null ||
-                  controller.selectedBrandId.value != null ||
+                  controller.selectedBrandId.isNotEmpty ||
                   controller.priceRange.value.start != 0 ||
                   controller.priceRange.value.end != 999999;
           return Row(
@@ -205,7 +205,7 @@ class FilterScreen extends GetView<FilterController> {
                     Get.back(
                       result: {
                         "categoryId": controller.selectedCategoryId.value,
-                        "brandId": controller.selectedBrandId.value,
+                        "brandId": controller.selectedBrandId,
                         "minPrice": controller.priceRange.value.start,
                         "maxPrice": controller.priceRange.value.end,
                       },

@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_data.freezed.dart';
+
 part 'user_data.g.dart';
 
 @freezed
@@ -11,8 +12,9 @@ abstract class UserData with _$UserData {
     @JsonKey(name: 'expiresAt') String? expiresAt,
     @JsonKey(name: 'resetRequired') bool? resetRequired,
     @JsonKey(name: 'role') String? role,
+    @JsonKey(name: 'roleId') int? roleId,
   }) = _UserData;
 
-  factory UserData.fromJson(Map<String, Object?> json) => _$UserDataFromJson(json);
+  factory UserData.fromJson(Map<String, Object?> json) =>
+      _$UserDataFromJson(json);
 }
-

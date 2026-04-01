@@ -237,84 +237,109 @@ class ProfileDetailsScreen extends GetView<DashboardController> {
     color: context.colorScheme.outlineVariant,
   );
   Widget passwordDialog(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Change password', style: context.textStyle.titleSmall),
-            Spacing.h16,
-
-            PassWordTextFormFieldWithLabel(
-              controller: controller.newPasswordController,
-              hint: "Enter New Password",
-              autofillHints: const [AutofillHints.newPassword],
-              textInputFormatter: [LengthLimitingTextInputFormatter(16)],
-              validator: (value) =>
-                  (value?.length ?? 0) < 6 ? "Minimum 6 characters" : null,
-            ),
-            Spacing.h12,
-
-            PassWordTextFormFieldWithLabel(
-              controller: controller.confirmPasswordController,
-              hint: "Re-enter New Password",
-              autofillHints: const [AutofillHints.newPassword],
-              textInputFormatter: [LengthLimitingTextInputFormatter(16)],
-              validator: (value) {
-                if ((value?.length ?? 0) < 6) {
-                  return "Minimum 6 characters";
-                }
-                if (value != controller.newPasswordController.text) {
-                  return "Passwords do not match";
-                }
-                return null;
-              },
-            ),
-            Spacing.h16,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+        child: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: RoundedButton(
-                    radius: 10,
-                    onPressed: () {
-                      Get.back();
-                    },
-                    text: "Cancel",
-                    backgroundColor:
-                        context.colorScheme.surfaceContainerHighest,
-                    foregroundColor: context.colorScheme.onSurface,
-                  ),
+                Text('Change password', style: context.textStyle.titleSmall),
+                Spacing.h16,
+            
+                /// OLD PASSWORD
+                PassWordTextFormFieldWithLabel(
+                  controller: controller.oldPasswordController,
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  hint: "Enter Old Password",
+                  textInputFormatter: [LengthLimitingTextInputFormatter(16)],
+                  validator: (value) {
+                    if ((value ?? '').isEmpty) return "Enter old password";
+                    if (value!.length < 6) return "Minimum 6 characters";
+                    return null;
+                  },
                 ),
-                Spacing.w8,
-                Expanded(
-                  child: RoundedButton(
-                    radius: 10,
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => CustomDialog(
-                          title: 'Password Changed Successfully!',
-                          icon: Icons.check_circle_outline,
-                          iconColor: ThemeColors.colorGreen,
-                          primaryBtnText: 'OK',
-                          onPrimaryPressed: () {
-                            Get.back();
+            
+                Spacing.h8,
+            
+                /// NEW PASSWORD
+                PassWordTextFormFieldWithLabel(
+                  controller: controller.newPasswordController,
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  hint: "Enter New Password",
+                  textInputFormatter: [LengthLimitingTextInputFormatter(16)],
+                  validator: (value) {
+                    if ((value ?? '').isEmpty) return "Enter new password";
+                    if (value!.length < 6) return "Minimum 6 characters";
+                    return null;
+                  },
+                ),
+            
+                Spacing.h8,
+            
+                /// CONFIRM PASSWORD
+                PassWordTextFormFieldWithLabel(
+                  controller: controller.confirmPasswordController,
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  hint: "Re-enter New Password",
+                  textInputFormatter: [LengthLimitingTextInputFormatter(16)],
+                  validator: (value) {
+                    if ((value ?? '').isEmpty) return "Confirm password";
+                    if (value!.length < 6) return "Minimum 6 characters";
+                    if (value != controller.newPasswordController.text) {
+                      return "Passwords do not match";
+                    }
+                    return null;
+                  },
+                ),
+            
+                Spacing.h16,
+            
+                Row(
+                  children: [
+                    Expanded(
+                      child: RoundedButton(
+                        radius: 10,
+                        onPressed: () => Get.back(),
+                        text: "Cancel",
+                        backgroundColor:
+                        context.colorScheme.surfaceContainerHighest,
+                        foregroundColor: context.colorScheme.onSurface,
+                      ),
+                    ),
+                    Spacing.w8,
+            
+                    /// DONE BUTTON
+                    Expanded(
+                      child: Obx(() {
+                        final isLoading =
+                            controller.changePasswordState.value.isLoading;
+            
+                        return RoundedButton(
+                          radius: 10,
+                          onPressed: isLoading
+                              ? null
+                              : () {
+                            if (formKey.currentState!.validate()) {
+                              controller.changePassword();
+                            }
                           },
-                        ),
-                      );
-                    },
-                    text: "Done",
-                    backgroundColor: context.colorScheme.primary,
-                    foregroundColor: context.colorScheme.onPrimary,
-                  ),
+                          text: isLoading ? "Please wait..." : "Done",
+                          backgroundColor: context.colorScheme.primary,
+                          foregroundColor: context.colorScheme.onPrimary,
+                        );
+                      }),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
+          ),
         ),
       ),
     );

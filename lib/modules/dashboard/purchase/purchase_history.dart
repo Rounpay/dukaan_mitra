@@ -282,11 +282,8 @@ enum PurchaseType {
   completed(statusId: 9),
   canceled(statusId: 7),
   pending(statusId: null);
-
   final int? statusId;
-
   const PurchaseType({required this.statusId});
-
   static PurchaseType fromStatusId(int? id) {
     if (id == 8 || id == 9) return PurchaseType.completed;
     if (id == 6 || id== 7) return PurchaseType.canceled;

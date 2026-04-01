@@ -24,9 +24,9 @@ class OnboardingScreen extends GetView<OnboardingController> {
                   children: [
                     Image.asset(
                       controller.images[index],
-                      height: 250,
+                      height: 180,
                     ),
-                    const SizedBox(height: 30),
+                  Spacing.h24,
                     Text(
                       controller.titles[index],
                       textAlign: TextAlign.center,

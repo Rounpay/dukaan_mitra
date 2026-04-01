@@ -20,7 +20,7 @@ class SignupScreen extends GetView<SignupController> {
     return Scaffold(
       body: Stack(
         children: [
-         /* SvgPicture.asset(
+          /* SvgPicture.asset(
            // 'assets/svg/circle_scatter_haikei.svg',
             color: context.colorScheme.primaryContainer.withOpacityX(.1),
             fit: BoxFit.cover,
@@ -127,14 +127,12 @@ class SignupScreen extends GetView<SignupController> {
                         : null,
                   ),
                   Spacing.h8,
-
                   _SectionLabel(label: 'Address'),
                   TextFieldWithLabel(
                     controller: controller.addressController,
                     textInputType: TextInputType.streetAddress,
                     autofillHints: const [AutofillHints.streetAddressLine1],
                     hint: "Enter Your Address",
-                    
                     minLines: 2,
                     validator: (value) => value?.trim().isEmpty == true
                         ? "Address is required"
@@ -144,10 +142,8 @@ class SignupScreen extends GetView<SignupController> {
                       color: context.colorScheme.primaryContainer,
                     ),
                     borderRadius: 20,
-                 
                   ),
                   Spacing.h8,
-
                   _SectionLabel(label: 'City'),
                   TextFieldWithLabel(
                     controller: controller.cityController,
@@ -163,7 +159,6 @@ class SignupScreen extends GetView<SignupController> {
                     ),
                   ),
                   Spacing.h8,
-
                   _SectionLabel(label: 'State'),
                   TextFieldWithLabel(
                     controller: controller.stateController,
@@ -179,7 +174,6 @@ class SignupScreen extends GetView<SignupController> {
                     ),
                   ),
                   Spacing.h8,
-
                   _SectionLabel(label: 'Pincode'),
                   TextFieldWithLabel(
                     controller: controller.pinCodeController,
@@ -245,7 +239,6 @@ class SignupScreen extends GetView<SignupController> {
                       foregroundColor: context.colorScheme.surface,
                       text: "Sign Up",
                       width: double.infinity,
-                      isLoading: controller.isLoading.value,
                       onPressed: controller.signup,
                     ),
                   ),
@@ -287,7 +280,8 @@ class SignupScreen extends GetView<SignupController> {
       ),
     );
   }
-/*  Widget _requiredDocumentsWidget(BuildContext context) {
+
+  /*  Widget _requiredDocumentsWidget(BuildContext context) {
     final state = controller.documentTypeState.value;
     return state.when(
       none: () => const SizedBox.shrink(),
@@ -417,7 +411,6 @@ class SignupScreen extends GetView<SignupController> {
   }*/
 }
 
-
 class RequiredDocumentsWidget extends StatelessWidget {
   final List<DocumentTypeResponse> requiredDocuments;
   final RxMap<int, String> documentFiles;
@@ -447,100 +440,102 @@ class RequiredDocumentsWidget extends StatelessWidget {
             ),
           ),
           Spacing.h8,
-          Obx(() => Column(
-            children: requiredDocuments.map((doc) {
-              final typeId = doc.documentTypeId!;
-              final filePath = documentFiles[typeId];
-              final isUploaded = filePath != null;
+          Obx(
+            () => Column(
+              children: requiredDocuments.map((doc) {
+                final typeId = doc.documentTypeId!;
+                final filePath = documentFiles[typeId];
+                final isUploaded = filePath != null;
 
-              return Container(
-                margin: const EdgeInsets.only(bottom: 8),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 12,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: isUploaded
-                      ? context.colorScheme.primaryContainer.withOpacity(.1)
-                      : context.colorScheme.surfaceContainerLowest,
-                  border: Border.all(
-                    color: isUploaded
-                        ? context.colorScheme.primary.withOpacity(.4)
-                        : context.colorScheme.outline.withOpacity(.2),
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 12,
                   ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      isUploaded
-                          ? Icons.check_circle_outline
-                          : Icons.upload_file_outlined,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: isUploaded
+                        ? context.colorScheme.primaryContainer.withOpacity(.1)
+                        : context.colorScheme.surfaceContainerLowest,
+                    border: Border.all(
                       color: isUploaded
-                          ? context.colorScheme.primary
-                          : context.colorScheme.onSurfaceVariant,
+                          ? context.colorScheme.primary.withOpacity(.4)
+                          : context.colorScheme.outline.withOpacity(.2),
                     ),
-                    Spacing.w8,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            doc.documentName ?? '',
-                            style: context.textStyle.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            isUploaded
-                                ? filePath.split('/').last
-                                : "Required  •  tap to upload",
-                            style: context.textStyle.bodySmall?.copyWith(
-                              color: isUploaded
-                                  ? context.colorScheme.primary
-                                  : context.colorScheme.error,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        isUploaded
+                            ? Icons.check_circle_outline
+                            : Icons.upload_file_outlined,
+                        color: isUploaded
+                            ? context.colorScheme.primary
+                            : context.colorScheme.onSurfaceVariant,
                       ),
-                    ),
-                    if (isUploaded)
-                      InkWell(
-                        onTap: () => onRemove(typeId),
-                        child: Icon(
-                          Icons.close,
-                          size: 18,
-                          color: context.colorScheme.error,
-                        ),
-                      )
-                    else
-                      InkWell(
-                        onTap: () => onPick(typeId),
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: context.colorScheme.primary,
-                          ),
-                          child: Text(
-                            "Upload",
-                            style: context.textStyle.bodySmall?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
+                      Spacing.w8,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              doc.documentName ?? '',
+                              style: context.textStyle.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
+                            Text(
+                              isUploaded
+                                  ? filePath.split('/').last
+                                  : "Required  •  tap to upload",
+                              style: context.textStyle.bodySmall?.copyWith(
+                                color: isUploaded
+                                    ? context.colorScheme.primary
+                                    : context.colorScheme.error,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
-                  ],
-                ),
-              );
-            }).toList(),
-          )),
+                      if (isUploaded)
+                        InkWell(
+                          onTap: () => onRemove(typeId),
+                          child: Icon(
+                            Icons.close,
+                            size: 18,
+                            color: context.colorScheme.error,
+                          ),
+                        )
+                      else
+                        InkWell(
+                          onTap: () => onPick(typeId),
+                          borderRadius: BorderRadius.circular(8),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: context.colorScheme.primary,
+                            ),
+                            child: Text(
+                              "Upload",
+                              style: context.textStyle.bodySmall?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
         ],
       ),
     );
@@ -550,7 +545,6 @@ class RequiredDocumentsWidget extends StatelessWidget {
 class _SectionLabel extends StatelessWidget {
   final String label;
   const _SectionLabel({required this.label});
-
   @override
   Widget build(BuildContext context) {
     return Align(

@@ -90,7 +90,7 @@ class ApiClient extends GetConnect with Printer {
 
   Future<BaseDataRes<List<ProductResponse>>> getProducts({
     int? categoryId,
-    int? brandId,
+    String? brandId,
     double? minPrice,
     double? maxPrice,
     String? search,
@@ -168,4 +168,5 @@ class ApiClient extends GetConnect with Printer {
     final response = await post('Auth/change-password',body);
     return ApiResponseHandler.parseBaseRes(response);
   }
+
 }

@@ -41,8 +41,9 @@ class HomeScreen extends GetView<DashboardController> {
       appBar: AppBar(
         backgroundColor: ThemeColors.bottomNavigationColor,
         elevation: 0,
-        toolbarHeight: 140,
+        toolbarHeight: 150,
         flexibleSpace: Column(
+            mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 40, bottom: 12),
@@ -218,7 +219,7 @@ class HomeScreen extends GetView<DashboardController> {
                         Obx(() {
                           final isFilterActive =
                               controller.selectedCategoryId.value != null ||
-                              controller.selectedBrandId.value != null ||
+                              controller.selectedBrandId.isNotEmpty ||
                               controller.priceRange.value.start != 0 ||
                               controller.priceRange.value.end != 999999;
 
@@ -235,8 +236,7 @@ class HomeScreen extends GetView<DashboardController> {
                                     arguments: {
                                       "categoryId":
                                           controller.selectedCategoryId.value,
-                                      "brandId":
-                                          controller.selectedBrandId.value,
+                                      "brandId": controller.selectedBrandId,
                                       "minPrice":
                                           controller.priceRange.value.start,
                                       "maxPrice":
@@ -250,8 +250,9 @@ class HomeScreen extends GetView<DashboardController> {
                                       );
                                       controller.selectedCategoryId.value =
                                           result["categoryId"];
-                                      controller.selectedBrandId.value =
-                                          result["brandId"];
+                                      controller.selectedBrandId.assignAll(
+                                        result["brandId"] ?? [],
+                                      );
                                       controller.fetchFilteredProducts();
                                     }
                                   });

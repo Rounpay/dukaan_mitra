@@ -220,12 +220,17 @@ extension StatusColorExtension on String {
     return colorScheme.surfaceVariant;
   }
   Color dotColor(ColorScheme colorScheme) {
-    if (isSuccess) return Colors.green;
-    if (isPending) return Colors.orange;
+    if (isSuccess) return ThemeColors.colorGreen;
+    if (isPending) return ThemeColors.colorOrange;
     if (isRejected) return colorScheme.error;
     return colorScheme.onSurfaceVariant;
   }
   Color textColor(ColorScheme colorScheme) {
     return dotColor(colorScheme);
   }
+
+}
+extension RoleIdExt on int {
+  bool get isFieldInspector => this == 4;
+  bool get isCustomer => this == 6;
 }

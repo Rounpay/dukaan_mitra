@@ -11,7 +11,7 @@ class FilterController extends GetxController {
 /*  final categoryState = UiState<List<ProductCategoryRes>>.none().obs;
   final brandState = UiState<List<BrandResponse>>.none().obs;*/
   var selectedCategoryId = RxnInt();
-  var selectedBrandId = RxnInt();
+  var selectedBrandId = <int>[].obs;
   var isLoading = true.obs;
   var minPrice = 0.0.obs;
   var maxPrice = 999999.0.obs;
@@ -20,7 +20,7 @@ class FilterController extends GetxController {
   @override
   void onInit() {
     selectedCategoryId.value = Get.arguments["categoryId"];
-    selectedBrandId.value = Get.arguments["brandId"];
+    selectedBrandId.assignAll(Get.arguments["brandId"] ?? []);
     priceRange.value = RangeValues(
         Get.arguments["minPrice"]?.toDouble() ?? 0,
         Get.arguments["maxPrice"]?.toDouble() ?? 999999);
@@ -41,9 +41,13 @@ void onReady() {
     selectedCategoryId.value == id ? null : id;
   }
 
+
   void toggleBrand(int id) {
-    selectedBrandId.value =
-    selectedBrandId.value == id ? null : id;
+    if (selectedBrandId.contains(id)) {
+      selectedBrandId.remove(id);
+    } else {
+      selectedBrandId.add(id);
+    }
   }
 
 
@@ -53,7 +57,7 @@ void onReady() {
 
   void resetFilters() {
     selectedCategoryId.value = null;
-    selectedBrandId.value = null;
+    selectedBrandId.clear();
     priceRange.value = const RangeValues(0, 999999);
   }
 

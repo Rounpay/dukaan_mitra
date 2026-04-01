@@ -20,6 +20,8 @@ class CommonController extends GetxController {
   final brandState = UiState<List<BrandResponse>>.none().obs;
   final loggedIn = false.obs;
 
+
+
   @override
   void onInit() {
     super.onInit();
