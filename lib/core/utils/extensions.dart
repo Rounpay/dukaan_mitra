@@ -196,7 +196,6 @@ extension IterableX<T> on Iterable<T> {
       final bVal = selector(b) ?? 0;
       return descending ? bVal.compareTo(aVal) : aVal.compareTo(bVal);
     });
-
     return list;
   }
 }
@@ -207,11 +206,8 @@ extension StatusColorExtension on String {
       _normalized == 'verified' ||
           _normalized == 'success' ||
           _normalized == 'approved';
-
   bool get isPending => _normalized == 'pending';
   bool get isRejected => _normalized == 'rejected';
-
-
   Color bgColor(ColorScheme colorScheme) {
     if (isSuccess) {
       return ThemeColors.colorGreen.withOpacity(0.1);
@@ -237,7 +233,6 @@ extension StatusColorExtension on String {
 
 extension RoleNavigationExtension on int? {
   bool get isFieldInspector => this == 4;
-
   bool get isDashboardUser => this == 6;
 
 }
