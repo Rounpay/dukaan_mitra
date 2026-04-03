@@ -6,6 +6,7 @@ import 'package:flutter_demo/core/utils/spacing.dart';
 import 'package:flutter_demo/core/widgets/error_text_widget.dart';
 import 'package:flutter_demo/core/widgets/loader.dart';
 import 'package:flutter_demo/core/widgets/rounded_button.dart';
+import 'package:flutter_demo/modules/dashboard/dashboard_controller.dart';
 import 'package:flutter_demo/modules/field_inspector/fi_dashboard_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -14,8 +15,9 @@ import '../../../core/widgets/icon_text_button.dart';
 import '../../../core/widgets/image_picker_card.dart';
 import '../../../core/widgets/text_field_with_label.dart';
 
-class FiStatusScreen extends GetView<FiDashboardController> {
+class FiStatusScreen extends GetView<DashboardController> {
   const FiStatusScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,18 +25,18 @@ class FiStatusScreen extends GetView<FiDashboardController> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          Text(
-          "Hello Inspector!",
-          style: context.textStyle.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          "Here's your day overview",
-          style: context.textStyle.labelSmall?.copyWith(
-            color: context.colorScheme.onSurfaceVariant,
-          ),
-        ),
+            Text(
+              "Hello Inspector!",
+              style: context.textStyle.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              "Here's your day overview",
+              style: context.textStyle.labelSmall?.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       ),
@@ -50,7 +52,7 @@ class FiStatusScreen extends GetView<FiDashboardController> {
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
               children: [
-      /*          Container(
+                /*          Container(
                   width: double.infinity,
                   margin: const EdgeInsets.all(12),
                   padding: const EdgeInsets.symmetric(
@@ -139,7 +141,10 @@ class FiStatusScreen extends GetView<FiDashboardController> {
                         ),
                       );
                     },
-                    error: (error) => ErrorTextWidget(msg: error),
+                    error: (error) => ErrorTextWidget(
+                      msg: error,
+                      onRetry: controller.fetchFiDashboard,
+                    ),
                     loading: () => Loader(),
                     none: () => const SizedBox(),
                   );
@@ -164,7 +169,9 @@ class FiStatusScreen extends GetView<FiDashboardController> {
                 Obx(() {
                   return controller.assignmentState.value.when(
                     success: (data) {
-                      final filteredData = switch (controller.selectedTab.value) {
+                      final filteredData = switch (controller
+                          .selectedTab
+                          .value) {
                         1 => data.where((e) => e.status.isAssigned).toList(),
                         2 => data.where((e) => e.status.isCompleted).toList(),
                         _ => data,
@@ -194,8 +201,11 @@ class FiStatusScreen extends GetView<FiDashboardController> {
                         },
                       );
                     },
-                    error: (error) => ErrorTextWidget(msg: error),
-                    loading: () => Loader(),
+                    error: (error) => ErrorTextWidget(
+                      msg: error,
+                      onRetry: controller.fetchAssignments,
+                    ),
+                    loading: () => Center(child: Loader()),
                     none: () => const SizedBox(),
                   );
                 }),
@@ -492,7 +502,9 @@ class FiStatusScreen extends GetView<FiDashboardController> {
             ),
             decoration: BoxDecoration(
               color: context.colorScheme.surface,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
             ),
             child: SingleChildScrollView(
               child: Column(
@@ -558,7 +570,8 @@ class FiStatusScreen extends GetView<FiDashboardController> {
                           radius: 10,
                           backgroundColor: context.colorScheme.primary,
                           foregroundColor: context.colorScheme.onPrimary,
-                          onPressed: () => controller.submitReport(assignmentId),
+                          onPressed: () =>
+                              controller.submitReport(assignmentId),
                         ),
                       ),
                     ],
@@ -571,5 +584,4 @@ class FiStatusScreen extends GetView<FiDashboardController> {
       }),
     );
   }
-
 }

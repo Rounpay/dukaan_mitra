@@ -39,13 +39,12 @@ class LoginController extends GetxController{
           TextInput.finishAutofillContext();
           await CommonController.to.setUserData(data);
           final roleId = data.roleId;
-          if (roleId.isFieldInspector) {
-            Get.offAllNamed(AppRoutes.fieldInspector);
-          } else if (roleId.isDashboardUser) {
+          if (roleId.isFieldInspector || roleId.isDashboardUser) {
             Get.offAllNamed(AppRoutes.dashboard);
           } else {
             Get.offAllNamed(AppRoutes.dashboard);
           }
+          Get.offAllNamed(AppRoutes.dashboard);
         });
       },
     );

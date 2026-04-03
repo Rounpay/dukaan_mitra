@@ -68,10 +68,12 @@ class FilterScreen extends GetView<FilterController> {
               ...List.generate(data.length, (index) {
                 final item = data[index];
                 return Obx(
-                      () => Row(
+                  () => Row(
                     children: [
                       Checkbox(
-                        value: controller.selectedCategoryId.value == item.categoryId,
+                        value:
+                            controller.selectedCategoryId.value ==
+                            item.categoryId,
                         onChanged: (_) {
                           controller.selectedCategoryId.value = item.categoryId;
                         },
@@ -131,10 +133,12 @@ class FilterScreen extends GetView<FilterController> {
               ...List.generate(brand.length, (index) {
                 final item = brand[index];
                 return Obx(
-                      () => Row(
+                  () => Row(
                     children: [
                       Checkbox(
-                        value: controller.selectedBrandId.contains(item.brandId),
+                        value: controller.selectedBrandId.contains(
+                          item.brandId,
+                        ),
                         onChanged: (_) {
                           controller.toggleBrand(item.brandId!);
                         },
@@ -162,9 +166,9 @@ class FilterScreen extends GetView<FilterController> {
         child: Obx(() {
           final isActive =
               controller.selectedCategoryId.value != null ||
-                  controller.selectedBrandId.isNotEmpty ||
-                  controller.priceRange.value.start != 0 ||
-                  controller.priceRange.value.end != 999999;
+              controller.selectedBrandId.isNotEmpty ||
+              controller.priceRange.value.start != 0 ||
+              controller.priceRange.value.end != 999999;
           return Row(
             children: [
               AnimatedSize(
@@ -172,30 +176,33 @@ class FilterScreen extends GetView<FilterController> {
                 curve: Curves.easeInOut,
                 child: isActive
                     ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    OutlinedButton(
-                      onPressed: controller.resetFilters,
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 20),
-                        side: BorderSide(
-                            color: context.colorScheme.primary),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        'Reset',
-                        style: context.textStyle.bodyMedium?.copyWith(
-                          color: context.colorScheme.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    Spacing.w16,
-                  ],
-                )
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          OutlinedButton(
+                            onPressed: controller.resetFilters,
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 16,
+                                horizontal: 20,
+                              ),
+                              side: BorderSide(
+                                color: context.colorScheme.primary,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: Text(
+                              'Reset',
+                              style: context.textStyle.bodyMedium?.copyWith(
+                                color: context.colorScheme.primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          Spacing.w16,
+                        ],
+                      )
                     : const SizedBox.shrink(),
               ),
 

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:flutter_demo/core/utils/extensions.dart';
 import 'package:flutter_demo/core/widgets/rounded_button.dart';
-
-import '../utils/spacing.dart';
-
 /// @Created by akash on 04-03-2025.
 /// Know more about author at https://akash.cloudemy.in
 

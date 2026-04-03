@@ -99,21 +99,6 @@ class AppPages {
       }),
     ),
 
-    GetPage(
-      name: AppRoutes.fieldInspector,
-      page: () => FiDashboardScreen(),
-      binding: BindingsBuilder(() {
-       //  Get.lazyPut(() => DashboardRepo());
-        Get.lazyPut(() => FiDashboardController(/*repo: Get.find()*/));
-      }),
-    ),
-/*    GetPage(
-      name: AppRoutes.fieldInspectorStatus,
-      page: () => FiStatusScreen(),
-      binding: BindingsBuilder(() {
-*//*        Get.lazyPut(() => ProductDetailsRepo());*//*
-        Get.lazyPut(() => FiStatusController(*//*repo: Get.find()*//*));
-      }),
-    ),*/
+
   ];
 }

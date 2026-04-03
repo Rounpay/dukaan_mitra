@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:flutter_demo/modules/dashboard/profile/profile_details_screen.dart';
 import 'package:flutter_demo/modules/field_inspector/%20fi_status/fi_status_screen.dart';
@@ -69,16 +70,15 @@ class FiDashboardController extends GetxController{
   void fetchAssignments() {
     repo.getMyAssignments((state) {
       assignmentState.value = state;
-      state.handleWithErrorBox(showLoader: true, (data) {});
     });
   }
 
   void fetchFiDashboard() {
     repo.getFiDashboard((state) {
       fiDashboardState.value = state;
-      state.handleWithErrorBox(showLoader: true, (data) {});
+
     });
   }
 
 
-}
+}*/

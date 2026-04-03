@@ -157,7 +157,9 @@ class PurchaseDetailsScreen extends GetView<PurchaseController> {
                 ),
               );
             },
-            error: (error) => ErrorTextWidget(msg: error),
+            error: (error) => ErrorTextWidget(msg: error,onRetry: () {
+              controller.fetchPurchase(controller.loanId.value);
+            },),
             loading: () => Loader(),
             none: () => SizedBox(),
           );

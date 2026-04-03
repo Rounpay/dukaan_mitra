@@ -25,10 +25,13 @@ class MyApp extends StatelessWidget {
     CommonController.to.loadLoginUserData();
     final roleId = CommonController.to.userData.value?.roleId;
     String initialRoute = AppRoutes.onboarding;
-    if (roleId.isFieldInspector) {
+ /*   if (roleId.isFieldInspector) {
       initialRoute = (AppRoutes.fieldInspector);
     } else if (roleId.isDashboardUser) {
       initialRoute = (AppRoutes.dashboard);
+    }*/
+    if (roleId.isFieldInspector || roleId.isDashboardUser) {
+      initialRoute = AppRoutes.dashboard;
     }
     TextTheme textTheme = createTextTheme(context, "ABeeZee", "Agbalumo");
     MaterialTheme theme = MaterialTheme(textTheme);

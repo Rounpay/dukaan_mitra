@@ -51,7 +51,12 @@ class PurchaseHistory extends GetView<DashboardController> {
             return state.when(
               none: () => const SizedBox(),
               loading: () => const Center(child: Loader()),
-              error: (msg) => Center(child: ErrorTextWidget(msg: msg)),
+              error: (msg) => Center(
+                child: ErrorTextWidget(
+                  msg: msg,
+                  onRetry: controller.customerPortal,
+                ),
+              ),
               success: (data) {
                 final pending = data
                     .where(
@@ -74,7 +79,7 @@ class PurchaseHistory extends GetView<DashboardController> {
                           PurchaseType.canceled,
                     )
                     .toList();
-          
+
                 return TabBarView(
                   children: [
                     _buildList(context, pending, PurchaseType.pending),
@@ -243,8 +248,10 @@ class PurchaseHistory extends GetView<DashboardController> {
                   isLoading: false,
                   onPressed: () {
                     if (type == PurchaseType.completed) {
-                     Get.toNamed(AppRoutes.purchaseDetailsScreen,arguments: {'loanId': loanId},
-                     );
+                      Get.toNamed(
+                        AppRoutes.purchaseDetailsScreen,
+                        arguments: {'loanId': loanId},
+                      );
                     }
                   },
                   child: Text(
@@ -282,11 +289,14 @@ enum PurchaseType {
   completed(statusId: 9),
   canceled(statusId: 7),
   pending(statusId: null);
+
   final int? statusId;
+
   const PurchaseType({required this.statusId});
+
   static PurchaseType fromStatusId(int? id) {
     if (id == 8 || id == 9) return PurchaseType.completed;
-    if (id == 6 || id== 7) return PurchaseType.canceled;
+    if (id == 6 || id == 7) return PurchaseType.canceled;
     return PurchaseType.pending;
   }
 }

@@ -1,3 +1,4 @@
+/*
 import '../../../../core/managers/network_manager.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/network/base_res.dart';
@@ -65,3 +66,4 @@ class FiInspectorRepo {
     }
   }
 }
+*/

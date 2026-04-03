@@ -20,10 +20,6 @@ class PurchaseController extends GetxController{
   void fetchPurchase(int loanId) async {
     repo.getLoanDetails(loanId, (state) {
       loanState.value = state;
-      state.handleWithErrorBox(
-        showLoader: true, (data) {
-      },
-      );
     });
   }
 }

@@ -202,4 +202,12 @@ class ApiClient extends GetConnect with Printer {
     final response = await post('FieldInspection/submitreport', formData);
     return ApiResponseHandler.parseBaseRes(response);
   }
+
+  Future<BaseDataRes<UserProfileModel>> getFiProfile() async {
+    final response = await get('Dashboard/profile');
+    return ApiResponseHandler.parse<UserProfileModel>(
+      response,
+          (json) => UserProfileModel.fromJson(json as Map<String, dynamic>),
+    );
+  }
 }

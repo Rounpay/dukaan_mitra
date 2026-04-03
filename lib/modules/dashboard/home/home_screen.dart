@@ -43,7 +43,7 @@ class HomeScreen extends GetView<DashboardController> {
         elevation: 0,
         toolbarHeight: 150,
         flexibleSpace: Column(
-            mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 40, bottom: 12),
@@ -85,12 +85,12 @@ class HomeScreen extends GetView<DashboardController> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: SizedBox(
-                        height: 90,
-                        child: Obx(() {
-                          return controller.categoryState.value.when(
-                            success: (data) {
-                              return ListView.separated(
+                      child: Obx(() {
+                        return controller.categoryState.value.when(
+                          success: (data) {
+                            return SizedBox(
+                              height: 90,
+                              child: ListView.separated(
                                 scrollDirection: Axis.horizontal,
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 12,
@@ -105,15 +105,19 @@ class HomeScreen extends GetView<DashboardController> {
                                     label: item.categoryName ?? "",
                                   );
                                 },
-                              );
-                            },
-                            error: (error) =>
-                                Center(child: ErrorTextWidget(msg: error)),
-                            loading: () => Loader(),
-                            none: () => const SizedBox(),
-                          );
-                        }),
-                      ),
+                              ),
+                            );
+                          },
+                          error: (error) => Center(
+                            child: ErrorTextWidget(
+                              msg: error,
+                              onRetry: controller.fetchCategory,
+                            ),
+                          ),
+                          loading: () => Loader(),
+                          none: () => const SizedBox(),
+                        );
+                      }),
                     ),
 
                     Padding(
@@ -327,7 +331,12 @@ class HomeScreen extends GetView<DashboardController> {
                       },
                     );
                   },
-                  error: (error) => Center(child: ErrorTextWidget(msg: error)),
+                  error: (error) => Center(
+                    child: ErrorTextWidget(
+                      msg: error,
+                      onRetry: controller.fetchProducts,
+                    ),
+                  ),
                   loading: () => Loader(),
                   none: () => const SizedBox(),
                 );
