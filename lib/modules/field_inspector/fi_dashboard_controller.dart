@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/modules/dashboard/profile/profile_details_screen.dart';
 import 'package:flutter_demo/modules/field_inspector/%20fi_status/fi_status_screen.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,7 +16,7 @@ class FiDashboardController extends GetxController{
   var selectedTab = 0.obs;
   final remarksController = TextEditingController();
   final selectedImagePath = RxnString();
-  final List<Widget> pages = [FiStatusScreen(),];
+  final List<Widget> pages = [FiStatusScreen(),ProfileDetailsScreen()];
   final assignmentState = UiState<List<FiAssignmentModel>>.none().obs;
   final fiDashboardState = UiState<FiDashboardData>.none().obs;
 

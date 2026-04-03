@@ -100,4 +100,21 @@ class CommonRepo {
       callback(UiState.error(res.message ?? 'Error occurred'));
     }
   }
+  Future<void> changePassword(
+      Object body,
+      void Function(UiState<BaseRes>) callback,
+      ) async {
+    callback(const UiState.loading());
+
+    if (!await isNetworkAvailable()) {
+      callback(const UiState.error('No internet connection'));
+      return;
+    }
+    final res = await ApiClient.to.changePassword(body);
+    if (res.success == true) {
+      callback(UiState.success(res));
+    } else {
+      callback(UiState.error(res.message ?? 'Error occurred'));
+    }
+  }
 }

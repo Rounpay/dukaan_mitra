@@ -15,7 +15,7 @@ import '../../../core/widgets/custom_dialog.dart';
 import '../../../core/widgets/rounded_button.dart';
 import '../../../core/widgets/text_field_with_label.dart';
 
-class ProfileDetailsScreen extends GetView<DashboardController> {
+class ProfileDetailsScreen extends StatelessWidget {
   const ProfileDetailsScreen({super.key});
 
   @override
@@ -238,6 +238,9 @@ class ProfileDetailsScreen extends GetView<DashboardController> {
   );
   Widget passwordDialog(BuildContext context) {
     final formKey = GlobalKey<FormState>();
+    final oldPasswordController = TextEditingController();
+    final newPasswordController = TextEditingController();
+    final confirmPasswordController = TextEditingController();
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
@@ -254,7 +257,7 @@ class ProfileDetailsScreen extends GetView<DashboardController> {
             
                 /// OLD PASSWORD
                 PassWordTextFormFieldWithLabel(
-                  controller: controller.oldPasswordController,
+                  controller: oldPasswordController,
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   hint: "Enter Old Password",
                   textInputFormatter: [LengthLimitingTextInputFormatter(16)],
@@ -269,7 +272,7 @@ class ProfileDetailsScreen extends GetView<DashboardController> {
             
                 /// NEW PASSWORD
                 PassWordTextFormFieldWithLabel(
-                  controller: controller.newPasswordController,
+                  controller: newPasswordController,
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   hint: "Enter New Password",
                   textInputFormatter: [LengthLimitingTextInputFormatter(16)],
@@ -284,14 +287,14 @@ class ProfileDetailsScreen extends GetView<DashboardController> {
             
                 /// CONFIRM PASSWORD
                 PassWordTextFormFieldWithLabel(
-                  controller: controller.confirmPasswordController,
+                  controller: confirmPasswordController,
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   hint: "Re-enter New Password",
                   textInputFormatter: [LengthLimitingTextInputFormatter(16)],
                   validator: (value) {
                     if ((value ?? '').isEmpty) return "Confirm password";
                     if (value!.length < 6) return "Minimum 6 characters";
-                    if (value != controller.newPasswordController.text) {
+                    if (value != newPasswordController.text) {
                       return "Passwords do not match";
                     }
                     return null;
@@ -318,14 +321,14 @@ class ProfileDetailsScreen extends GetView<DashboardController> {
                     Expanded(
                       child: Obx(() {
                         final isLoading =
-                            controller.changePasswordState.value.isLoading;
+                            CommonController.to.changePasswordState.value.isLoading;
                         return RoundedButton(
                           radius: 10,
                           onPressed: isLoading
                               ? null
                               : () {
                             if (formKey.currentState!.validate()) {
-                              controller.changePassword();
+                              CommonController.to.changePassword(oldPasswordController.text,newPasswordController.text);
                             }
                           },
                           text: isLoading ? "Please wait..." : "Done",

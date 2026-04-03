@@ -24,12 +24,7 @@ class FloatingNavBar extends StatefulWidget {
 }
 
 class _FloatingNavBarState extends State<FloatingNavBar> {
-  final icons = const [
-    Icons.home_outlined,
-    Icons.shopping_bag_outlined,
-   // Icons.favorite_border,
-    Icons.person_outline,
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +52,7 @@ class _FloatingNavBarState extends State<FloatingNavBar> {
       child:  Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(icons.length, (index) {
+      children: List.generate(widget.icons.length, (index) {
         final isSelected = index == widget.selectedIndex;
         return Expanded(
           child: InkWell(
@@ -86,13 +81,13 @@ class _FloatingNavBarState extends State<FloatingNavBar> {
                   ),
                   padding: const EdgeInsets.all(12),
                   child: Icon(
-                    _filledIcon(icons[index]),
+                    _filledIcon(widget.icons[index]),
                     color: colorScheme.surface,
                     size: 20,
                   ),
                 )
                     : Icon(
-                  icons[index],
+                  widget.icons[index],
                   key: const ValueKey('outlined'),
                   color: colorScheme.surface,
                 ),

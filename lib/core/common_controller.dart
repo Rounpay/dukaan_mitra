@@ -1,6 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_demo/core/network/ui_state.dart';
+import 'package:flutter_demo/core/theme/theme_colors.dart';
 import 'package:flutter_demo/core/utils/common_methods.dart';
 import 'package:flutter_demo/core/utils/extensions.dart';
+import 'package:flutter_demo/core/widgets/custom_dialog.dart';
 import 'package:get/get.dart';
 import '../data/models/user_data.dart';
 import '../data/repositories/common_repo.dart';
@@ -9,6 +12,7 @@ import '../modules/dashboard/data/models/product_category_res.dart';
 import '../modules/profile/data/model/user_profile_model.dart';
 import '../route/app_routes.dart';
 import 'managers/storage_manager.dart';
+import 'network/base_res.dart';
 
 class CommonController extends GetxController {
   static CommonController get to => Get.find();
@@ -19,6 +23,7 @@ class CommonController extends GetxController {
   final categoryState = UiState<List<ProductCategoryRes>>.none().obs;
   final brandState = UiState<List<BrandResponse>>.none().obs;
   final loggedIn = false.obs;
+  final changePasswordState = UiState<BaseRes>.none().obs;
 
 
 
@@ -67,11 +72,6 @@ class CommonController extends GetxController {
     if (isRefresh || profileState.value.isError || profileState.value.isNone) {
       await repo.getUserProfile((state) {
         profileState.value = state;
-        state.handleWithErrorBox(
-          showLoader: false,
-              (data) {
-          },
-        );
       });
     }
   }
@@ -80,10 +80,7 @@ class CommonController extends GetxController {
     if (isRefresh || categoryState.value.isNone || categoryState.value.isError) {
       await repo.getCategory((state) {
         categoryState.value = state;
-        state.handleWithErrorBox(
-          showLoader: false,
-              (data) {},
-        );
+
       });
     }
   }
@@ -92,12 +89,41 @@ class CommonController extends GetxController {
     if (isRefresh || brandState.value.isNone || brandState.value.isError) {
       await repo.getBrand((state) {
         brandState.value = state;
-        state.handleWithErrorBox(
-          showLoader: false,
-              (data) {},
-        );
+
       });
     }
+  }
+
+  void changePassword(String old, String newPass) {
+    repo.changePassword(
+      {
+        "currentPassword": old,
+        "newPassword":newPass,
+        "confirmPassword": newPass,
+      },
+          (state) {
+        changePasswordState.value = state;
+
+        state.handleWithErrorBox(
+          showLoader: true,
+              (data) {
+            Get.back();
+            Get.dialog(
+              CustomDialog(
+                title: 'Password Changed Successfully!',
+                icon: Icons.check_circle_outline,
+                iconColor: ThemeColors.colorGreen,
+                primaryBtnText: 'OK',
+                onPrimaryPressed: () {
+                  Get.back();
+                  Get.offAllNamed(AppRoutes.login);
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
 }
